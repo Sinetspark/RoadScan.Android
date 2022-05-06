@@ -20,7 +20,7 @@ import kotlin.random.Random
 class TestWorker (
     appContext: Context,
     workerParams: WorkerParameters,
-    private val MyLocationManager: MyLocationManager
+    private val myLocationManager: MyLocationManager
     ) : Worker(appContext, workerParams) {
 
     private val notificationManager
@@ -31,11 +31,12 @@ class TestWorker (
         // Mark the Worker as important
         setForegroundAsync(createForegroundInfo())
         //блокирующая задача
-        testWork()
+        //testWork()
+        updateLocation()
         return Result.success()
     }
 
-    private fun testWork() {
+   /* private fun testWork() {
         runBlocking {
             repeat(1000) {
                 if (!isStopped) {
@@ -46,14 +47,12 @@ class TestWorker (
                 }
             }
         }
-    }
+    }*/
 
     private fun updateLocation() {
-        MyLocationManager.locations
+        myLocationManager.locations
             .blockingSubscribe { location ->
-                interactor.postLocation(location.latitude, location.longitude)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe()
+                Log.i("раз", "${location.latitude}, ${location.longitude}")
             }
     }
 

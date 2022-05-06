@@ -14,6 +14,6 @@ class WorkerModule {
     fun providesLocationWorker(context: Context, workerParameters: WorkerParameters, myLocationManager: MyLocationManager): TestWorker = TestWorker(
         appContext = context,
         workerParams = workerParameters,
-        MyLocationManager = myLocationManager,
+        myLocationManager = myLocationManager,
     )
 }
