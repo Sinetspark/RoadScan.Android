@@ -3,7 +3,7 @@ package com.example.inroad.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import com.example.inroad.R
+import com.example.inroad.MyLocationManager
 import com.example.inroad.databinding.ActivityMainBinding
 import com.example.inroad.di.AppComponentProvider
 
@@ -34,6 +34,11 @@ class MainActivity : AppCompatActivity() {
         binding.allButtonService.setOnClickListener {
             viewModel.onServiceButtonClicked(applicationContext)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        MyLocationManager.onStart(this)
     }
 }
 

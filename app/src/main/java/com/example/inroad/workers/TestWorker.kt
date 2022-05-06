@@ -10,18 +10,22 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
+import com.example.inroad.MyLocationManager
+import com.example.inroad.domain.PointInteractor
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
 class TestWorker (
     appContext: Context,
-    workerParams: WorkerParameters
+    workerParams: WorkerParameters,
+    private val MyLocationManager: MyLocationManager
     ) : Worker(appContext, workerParams) {
 
     private val notificationManager
         get() = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    //private val interactor = WeatherInteractor(appContext)
+        private val interactor = PointInteractor(appContext)
 
     override fun doWork(): Result {
         // Mark the Worker as important
@@ -35,13 +39,22 @@ class TestWorker (
         runBlocking {
             repeat(1000) {
                 if (!isStopped) {
-                    /*interactor.postLocation(Random.nextDouble(), Random.nextDouble())
-                        .subscribe()*/
+                    interactor.postLocation(Random.nextDouble(), Random.nextDouble())
+                        .subscribe()
                             Log.i("раз", "два")
                     delay(1000)
                 }
             }
         }
+    }
+
+    private fun updateLocation() {
+        MyLocationManager.locations
+            .blockingSubscribe { location ->
+                interactor.postLocation(location.latitude, location.longitude)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe()
+            }
     }
 
     @NonNull
