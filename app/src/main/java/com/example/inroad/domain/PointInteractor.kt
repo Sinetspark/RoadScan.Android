@@ -17,4 +17,6 @@ class PointInteractor constructor(context: Context) {
         }
         return@map result;
     }
+
+    fun postLocation(latitude: Double, longitude: Double) = repository.postLocation(latitude, longitude)
 }

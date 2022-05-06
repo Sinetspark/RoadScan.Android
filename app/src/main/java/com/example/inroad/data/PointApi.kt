@@ -15,4 +15,7 @@ class PointApi {
     private val service = retrofit.create(PointService::class.java)
 
     fun getPoints() = service.getPoints()
+
+    fun postLocation(latitude: Double, longitude: Double) =
+        service.postLocatiton("$latitude, $longitude")
 }

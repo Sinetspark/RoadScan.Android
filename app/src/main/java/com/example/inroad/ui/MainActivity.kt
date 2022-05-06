@@ -2,14 +2,19 @@ package com.example.inroad.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
-import com.example.inroad.R
+import com.example.inroad.MyLocationManager
 import com.example.inroad.databinding.ActivityMainBinding
 import com.example.inroad.di.AppComponentProvider
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+
+    @Inject
+    lateinit var myLocationManager: MyLocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +40,16 @@ class MainActivity : AppCompatActivity() {
             viewModel.onServiceButtonClicked(applicationContext)
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        myLocationManager.onStart(this)
+        myLocationManager.locations
+            .subscribe { location -> binding.textView.text = "${location.latitude}, ${location.longitude}"
+            }
+    }
+
+
 }
 
 /*
