@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
@@ -62,9 +64,17 @@ class MyLocationManager (
             )
             return
         }
-        val listener = LocationListener { location ->
-            locationSubject.onNext(location)
+
+        var listener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                locationSubject.onNext(location)
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?)
+            {
+                Log.i("LocationListener", "StatusChanged")
+            }
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200, 1f, listener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200, 1f, listener)
     }
 }

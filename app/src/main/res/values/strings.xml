@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">InRoad</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="default_info_title">My Location</string>
+    <string name="default_info_snippet">Location</string>
+    <string name="pick_place">pick place</string>
 </resources>
