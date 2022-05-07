@@ -67,14 +67,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         myLocationManager.locations
             .subscribe { location ->
                 if (mMap != null) {
-                    val markerOptions = MarkerOptions()
-                    val latLng = LatLng(location.latitude, location.longitude)
-                    markerOptions.position(latLng)
-                    markerOptions.title("Current Position")
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
-                    currentMarker?.remove()
-                    currentMarker = mMap.addMarker(markerOptions)
-                    mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//                    val markerOptions = MarkerOptions()
+//                    val latLng = LatLng(location.latitude, location.longitude)
+//                    markerOptions.position(latLng)
+//                    markerOptions.title("Current Position")
+//                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+//                    currentMarker?.remove()
+//                    currentMarker = mMap.addMarker(markerOptions)
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location!!.latitude,
                             location!!.longitude), DEFAULT_ZOOM.toFloat()))
                 }
@@ -83,6 +83,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.isMyLocationEnabled = true
+        mMap.uiSettings.isZoomControlsEnabled = true
+        mMap.uiSettings.isCompassEnabled = true
+        mMap.setMinZoomPreference(6f)
+        mMap.setMinZoomPreference(14f)
     }
 }
 
