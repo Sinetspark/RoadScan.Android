@@ -3,6 +3,7 @@ package com.example.inroad.di
 import android.content.Context
 import com.example.inroad.managers.LocationManager
 import com.example.inroad.domain.PointInteractor
+import com.example.inroad.managers.AccelerometerManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -20,5 +21,11 @@ class AppModule {
     @Singleton
     fun providesLocationManager(context: Context): LocationManager {
         return LocationManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun providesAccelerometerManager(context: Context): AccelerometerManager {
+        return AccelerometerManager(context)
     }
 }
