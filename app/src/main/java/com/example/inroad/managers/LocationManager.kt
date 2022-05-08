@@ -1,4 +1,4 @@
-package com.example.inroad
+package com.example.inroad.managers
 
 import android.Manifest
 import android.content.Context
@@ -15,7 +15,7 @@ import androidx.core.app.ActivityCompat
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class MyLocationManager (
+class LocationManager (
     context: Context
 ) {
 
@@ -65,7 +65,7 @@ class MyLocationManager (
             return
         }
 
-        var listener = object : LocationListener {
+        val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 locationSubject.onNext(location)
             }

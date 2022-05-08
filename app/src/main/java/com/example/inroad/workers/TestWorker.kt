@@ -10,17 +10,13 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import com.example.inroad.MyLocationManager
+import com.example.inroad.managers.LocationManager
 import com.example.inroad.domain.PointInteractor
-import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import kotlin.random.Random
 
 class TestWorker (
     appContext: Context,
     workerParams: WorkerParameters,
-    private val myLocationManager: MyLocationManager
+    private val locationManager: LocationManager
     ) : Worker(appContext, workerParams) {
 
     private val notificationManager
@@ -50,7 +46,7 @@ class TestWorker (
     }*/
 
     private fun updateLocation() {
-        myLocationManager.locations
+        locationManager.locations
             .blockingSubscribe { location ->
                 Log.i("раз", "${location.latitude}, ${location.longitude}")
             }

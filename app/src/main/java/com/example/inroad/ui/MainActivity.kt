@@ -2,9 +2,8 @@ package com.example.inroad.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
-import com.example.inroad.MyLocationManager
+import com.example.inroad.managers.LocationManager
 import com.example.inroad.R
 import com.example.inroad.databinding.ActivityMainBinding
 import com.example.inroad.di.AppComponentProvider
@@ -12,10 +11,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -28,7 +25,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val DEFAULT_ZOOM = 15
 
     @Inject
-    lateinit var myLocationManager: MyLocationManager
+    lateinit var locationManager: LocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +60,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        myLocationManager.onStart(this)
-        myLocationManager.locations
+        locationManager.onStart(this)
+        locationManager.locations
             .subscribe { location ->
                 if (mMap != null) {
 //                    val markerOptions = MarkerOptions()

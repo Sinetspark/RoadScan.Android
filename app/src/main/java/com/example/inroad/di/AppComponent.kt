@@ -2,7 +2,7 @@ package com.example.inroad.di
 
 import android.content.Context
 import com.example.inroad.MainApplication
-import com.example.inroad.MyLocationManager
+import com.example.inroad.managers.LocationManager
 import com.example.inroad.ui.MainActivity
 import com.example.inroad.ui.MainViewModel
 import dagger.BindsInstance
@@ -17,7 +17,7 @@ interface AppComponent {
     fun inject(viewModel: MainViewModel)
     fun inject(app: MainApplication)
 
-    fun myLocationManager(): MyLocationManager
+    fun locationManager(): LocationManager
 
     @Component.Factory
     interface Factory {
