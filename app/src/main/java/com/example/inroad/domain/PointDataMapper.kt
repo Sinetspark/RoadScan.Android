@@ -5,6 +5,6 @@ import com.example.inroad.domain.entities.Point
 
 class PointDataMapper {
     fun dataToDomain(data: PointData): Point {
-        return Point(data.latitude, data.longitude)
+        return Point(data.Id, data.latitude, data.longitude)
     }
 }
