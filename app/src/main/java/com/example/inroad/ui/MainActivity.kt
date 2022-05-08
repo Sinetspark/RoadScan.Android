@@ -2,11 +2,13 @@ package com.example.inroad.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.example.inroad.managers.LocationManager
 import com.example.inroad.R
 import com.example.inroad.databinding.ActivityMainBinding
 import com.example.inroad.di.AppComponentProvider
+import com.example.inroad.managers.AccelerometerManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -26,6 +28,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @Inject
     lateinit var locationManager: LocationManager
+
+    @Inject
+    lateinit var accelerometerManager: AccelerometerManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +80,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         LatLng(location!!.latitude,
                             location!!.longitude), DEFAULT_ZOOM.toFloat()))
                 }
+            }
+        accelerometerManager.onStart(this)
+        accelerometerManager.spreads
+            .subscribe { spread ->
+                Log.i("SensorChanged",
+                    "${spread[0]}, ${spread[1]}, ${spread[2]}")
             }
     }
 
