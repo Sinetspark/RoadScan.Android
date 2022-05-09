@@ -22,8 +22,10 @@ class LocationManager (
     private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     private val locationSubject by lazy { BehaviorSubject.create<Location>() }
+    private val speedSubject by lazy { BehaviorSubject.create<Float>() }
 
     val locations: Observable<Location> = locationSubject
+    val speed: Observable<Float> = speedSubject
 
     fun onStart(activity: ComponentActivity) {
         if (ActivityCompat.checkSelfPermission(
@@ -68,6 +70,7 @@ class LocationManager (
         val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 locationSubject.onNext(location)
+                speedSubject.onNext(location.speed)
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?)
