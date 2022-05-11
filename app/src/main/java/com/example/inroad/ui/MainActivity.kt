@@ -1,25 +1,37 @@
 package com.example.inroad.ui
 
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.inroad.managers.LocationManager
 import com.example.inroad.R
 import com.example.inroad.databinding.ActivityMainBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.AccelerometerManager
+import com.example.inroad.managers.LocationManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
+
+    @Inject
+    lateinit var viewModelFactory: MainViewModel.Factory
+
+    private val viewModel: MainViewModel by viewModels {
+        viewModelFactory
+    }
 
     private lateinit var mMap: GoogleMap
 
@@ -38,20 +50,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val component = (applicationContext as AppComponentProvider).component
         component.inject(this)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        viewModel.liveData.observe(this) { state ->
+//            binding.allMaterialtoolbarTopbar.title = state.title
+//            binding.allTextviewTemperature.text = state.temperature
+//            binding.allTextviewWeather.setText(state.weatherTextId)
+//            binding.root.setBackgroundColor(state.backgroundColor)
+            for (point in state.points) {
+                mMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(point.latitude, point.longitude))
+                )
+            }
+        }
+
         /*binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Сначала создаем подписку на изменение состояния экрана
-       *//* viewModel.liveData.observe(this) { state ->
-            binding.allMaterialtoolbarTopbar.title = state.title
-            binding.allTextviewTemperature.text = state.temperature
-            binding.allTextviewWeather.setText(state.weatherTextId)
-            binding.root.setBackgroundColor(state.backgroundColor)
-        }*//*
 
         // Затем вызываем у viewModel колбэк onCreated оповещая viewModel что подготовительные работы завершены
         // Эта проверка на savedInstanceState здесь нужна чтобы onInitiallyCreated вызвался только при первом старте экрана
@@ -79,18 +97,36 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location!!.latitude,
                             location!!.longitude), DEFAULT_ZOOM.toFloat()))
+                    viewModel.getPoints(applicationContext, 5.0, 24.0, 0, 10000)
                 }
             }
         accelerometerManager.onStart(this)
         accelerometerManager.spreads
             .subscribe { spread ->
-                Log.i("SensorChanged",
-                    "${spread[0]}, ${spread[1]}, ${spread[2]}")
+//                Log.i("SensorChanged",
+//                    "${spread[0]}, ${spread[1]}, ${spread[2]}")
             }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         mMap.isMyLocationEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isCompassEnabled = true

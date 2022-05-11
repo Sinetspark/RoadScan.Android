@@ -12,11 +12,11 @@ import javax.inject.Singleton
 @Module
 class AppModule {
 
-    @Provides
-    @Singleton
-    fun providesPointInteractor(context: Context): PointInteractor {
-        return PointInteractor(context)
-    }
+//    @Provides
+//    @Singleton
+//    fun providesPointInteractor(): PointInteractor {
+//        return PointInteractor()
+//    }
 
     @Provides
     @Singleton

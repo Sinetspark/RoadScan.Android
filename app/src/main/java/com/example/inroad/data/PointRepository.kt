@@ -11,7 +11,6 @@ class PointRepository {
     private val api = PointApi()
     private val gson = Gson()
 
-    fun getPoints(): Observable<Array<PointData>> = api.getPoints()
-
-    fun postLocation(latitude: Double, longitude: Double): Completable = api.postLocation(latitude, longitude)
+    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int): Observable<Array<PointData>> =
+        api.getPoints(latitude, longitude, minDistance, maxDistance)
 }

@@ -21,7 +21,7 @@ class TestWorker (
 
     private val notificationManager
         get() = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        private val interactor = PointInteractor(appContext)
+        private val interactor = PointInteractor()
 
     override fun doWork(): Result {
         // Mark the Worker as important

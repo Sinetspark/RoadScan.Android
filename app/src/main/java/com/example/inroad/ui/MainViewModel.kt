@@ -1,10 +1,12 @@
 package com.example.inroad.ui
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
@@ -16,14 +18,14 @@ import com.example.inroad.domain.entities.Point
 import javax.inject.Inject
 
 
-class MainViewModel : ViewModel() {
+class MainViewModel @Inject constructor(
+    private val pointInteractor: PointInteractor
+) : ViewModel() {
 
     companion object {
         private const val CITY_MASK = "{city}"
     }
 
-    @Inject
-    lateinit var pointInteractor: PointInteractor
     private val _existingPoints: HashSet<String> = HashSet<String>()
     private val _liveData: MutableLiveData<MapUiState> = MutableLiveData<MapUiState>()
     val liveData: LiveData<MapUiState> = _liveData
@@ -34,7 +36,6 @@ class MainViewModel : ViewModel() {
      */
     fun onInitiallyCreated(component: AppComponent, context: Context) {
         component.inject(this)
-        getPoints(context)
     }
 
     fun onServiceButtonClicked(context: Context) {
@@ -47,19 +48,29 @@ class MainViewModel : ViewModel() {
             .enqueue()
     }
 
-    private fun getPoints(context: Context) {
-        pointInteractor.getPoints()
-            .map { points ->
-                val result = listOf<Point>()
-                for (point in points) {
-                    if (!_existingPoints.contains(point.id)) {
-                        result.plus(point)
-                        _existingPoints.add(point.id)
+    fun getPoints(context: Context, latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int) {
+        try {
+            pointInteractor.getPoints(latitude, longitude, minDistance, maxDistance)
+                .map { points ->
+                    val result = mutableListOf<Point>()
+                    for (point in points) {
+                        if (!_existingPoints.contains(point.id)) {
+                            result.add(point)
+                            _existingPoints.add(point.id)
+                        }
                     }
+                    MapUiState(result)
                 }
-                MapUiState(result)
-            }
-            .subscribeOn(Schedulers.io())
-            .subscribe(_liveData::postValue)
+                .subscribeOn(Schedulers.io())
+                .subscribe(_liveData::postValue)
+        } catch (e: Exception) {
+            Log.i("tagerror", "error")
+        }
+    }
+
+    class Factory @Inject constructor(private val viewModel: MainViewModel) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return viewModel as T
+        }
     }
 }
