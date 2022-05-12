@@ -1,19 +1,19 @@
 package com.example.inroad.data
 
 import com.example.inroad.data.dto.GetPoints
+import com.example.inroad.data.dto.InsertBumps
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-class PointApi {
-    //TO DO
+class BumpApi {
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://f5cc-94-245-181-202.jp.ngrok.io/api/")
+        .baseUrl("http://10.0.2.2/")
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private val service = retrofit.create(PointService::class.java)
+    private val service = retrofit.create(BumpService::class.java)
 
-    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int) = service.getPoints(GetPoints(latitude, longitude, minDistance, maxDistance))
+    fun insertBumps(insertBumps: InsertBumps) = service.insertBumps(insertBumps)
 }
