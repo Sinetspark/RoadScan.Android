@@ -2,8 +2,8 @@ package com.example.inroad.di
 
 import android.content.Context
 import com.example.inroad.MainApplication
-import com.example.inroad.managers.AccelerometerManager
 import com.example.inroad.managers.LocationManager
+import com.example.inroad.managers.BumpManager
 import com.example.inroad.ui.MainActivity
 import com.example.inroad.ui.MainViewModel
 import dagger.BindsInstance
@@ -19,7 +19,7 @@ interface AppComponent {
     fun inject(app: MainApplication)
 
     fun locationManager(): LocationManager
-    fun accelerometerManager(): AccelerometerManager
+    fun bumpManager(): BumpManager
 
     @Component.Factory
     interface Factory {
