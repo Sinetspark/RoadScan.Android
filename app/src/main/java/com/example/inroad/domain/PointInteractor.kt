@@ -2,21 +2,21 @@ package com.example.inroad.domain
 
 import android.content.Context
 import com.example.inroad.data.PointRepository
-import com.example.inroad.data.dto.PointData
 import com.example.inroad.domain.entities.Point
 import io.reactivex.rxjava3.core.Observable
+import javax.inject.Inject
 
-class PointInteractor constructor(context: Context) {
+class PointInteractor @Inject constructor() {
     private val repository: PointRepository = PointRepository()
     private val mapper: PointDataMapper = PointDataMapper()
 
-    fun getPoints(): Observable<Array<Point>> = repository.getPoints().map {
-        val result = arrayOf<Point>();
+    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int): Observable<List<Point>> =
+        repository.getPoints(latitude, longitude, minDistance, maxDistance).map {
+        val result = mutableListOf<Point>();
         for (pointData in it) {
-            result.plus(mapper.dataToDomain(pointData));
+            val test = mapper.dataToDomain(pointData)
+            result.add(test);
         }
-        return@map result;
+        result
     }
-
-    fun postLocation(latitude: Double, longitude: Double) = repository.postLocation(latitude, longitude)
 }
