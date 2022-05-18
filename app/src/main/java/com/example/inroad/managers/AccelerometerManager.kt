@@ -11,13 +11,9 @@ import androidx.activity.ComponentActivity
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class AccelerometerManager(
-    context: Context
-) {
+class AccelerometerManager {
     private lateinit var sensorManager: SensorManager
-
     private val accelerometerSubject by lazy { BehaviorSubject.create<FloatArray>() }
-
     val spreads: Observable<FloatArray> = accelerometerSubject
 
     fun onStart(activity: ComponentActivity) {
