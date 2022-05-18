@@ -12,6 +12,7 @@ import com.example.inroad.R
 import com.example.inroad.databinding.ActivityMainBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.AccelerometerManager
+import com.example.inroad.managers.BumpManager
 import com.example.inroad.managers.LocationManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -41,8 +42,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     @Inject
     lateinit var locationManager: LocationManager
 
+//    @Inject
+//    lateinit var accelerometerManager: AccelerometerManager
+
     @Inject
-    lateinit var accelerometerManager: AccelerometerManager
+    lateinit var bumpManager: BumpManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,18 +58,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        viewModel.liveData.observe(this) { state ->
-//            binding.allMaterialtoolbarTopbar.title = state.title
-//            binding.allTextviewTemperature.text = state.temperature
-//            binding.allTextviewWeather.setText(state.weatherTextId)
-//            binding.root.setBackgroundColor(state.backgroundColor)
-            for (point in state.points) {
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(LatLng(point.latitude, point.longitude))
-                )
-            }
-        }
+//        viewModel.liveData.observe(this) { state ->
+////            binding.allMaterialtoolbarTopbar.title = state.title
+////            binding.allTextviewTemperature.text = state.temperature
+////            binding.allTextviewWeather.setText(state.weatherTextId)
+////            binding.root.setBackgroundColor(state.backgroundColor)
+//            for (point in state.points) {
+//                mMap.addMarker(
+//                    MarkerOptions()
+//                        .position(LatLng(point.latitude, point.longitude))
+//                )
+//            }
+//        }
 
         /*binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -97,14 +101,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location!!.latitude,
                             location!!.longitude), DEFAULT_ZOOM.toFloat()))
-                    viewModel.getPoints(applicationContext, 5.0, 24.0, 0, 10000)
+                   // viewModel.getPoints(applicationContext, 5.0, 24.0, 0, 10000)
                 }
             }
-        accelerometerManager.onStart(this)
-        accelerometerManager.spreads
-            .subscribe { spread ->
+//        accelerometerManager.onStart(this)
+//        accelerometerManager.spreads
+//            .subscribe { spread ->
 //                Log.i("SensorChanged",
 //                    "${spread[0]}, ${spread[1]}, ${spread[2]}")
+       //     }
+        bumpManager.onStart(this, locationManager)
+        bumpManager.bumps
+            .subscribe { locations ->
+                Log.i("BumpLocation",
+                    "${locations.latitude}, ${locations.longitude}")
             }
     }
 
