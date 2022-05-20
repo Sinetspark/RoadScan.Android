@@ -21,8 +21,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
+import com.google.android.gms.maps.model.MarkerOptions
 import javax.inject.Inject
 
 
@@ -40,6 +39,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var currentMarker: Marker? = null
     private val DEFAULT_ZOOM = 15
+    private var initPoints = false;
 
     @Inject
     lateinit var locationManager: LocationManager
@@ -52,41 +52,37 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // setContentView(R.layout.activity_maps)
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val component = (applicationContext as AppComponentProvider).component
         component.inject(this)
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
         viewModel.ping()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-            }, {
+        viewModel.pingData.observe(this) {
+            state ->
+            if (!state.success) {
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("Ошибка")
-                builder.setMessage("Извините, сервис недоступен")
+                builder.setMessage("Извините, сервис временно недоступен")
                 builder.setPositiveButton("Oк",
                     DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
-                val alert = builder.create()
-                alert.show()
-            });
-//        viewModel.liveData.observe(this) { state ->
-////            binding.allMaterialtoolbarTopbar.title = state.title
-////            binding.allTextviewTemperature.text = state.temperature
-////            binding.allTextviewWeather.setText(state.weatherTextId)
-////            binding.root.setBackgroundColor(state.backgroundColor)
-//            for (point in state.points) {
-//                mMap.addMarker(
-//                    MarkerOptions()
-//                        .position(LatLng(point.latitude, point.longitude))
-//                )
-//            }
-//        }
+                builder.show()
+            } else {
+                startManagers()
+                viewModel.onBumpManagerStart(applicationContext)
+                initPoints = true
+            }
+        }
+        viewModel.mapData.observe(this) { state ->
+            for (point in state.points) {
+                mMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(point.latitude, point.longitude))
+                )
+            }
+        }
 
         // Сначала создаем подписку на изменение состояния экрана
 
@@ -102,21 +98,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        locationManager.onStart(this)
         locationManager.locations
             .subscribe { location ->
                 if (mMap != null) {
-//                    val markerOptions = MarkerOptions()
-//                    val latLng = LatLng(location.latitude, location.longitude)
-//                    markerOptions.position(latLng)
-//                    markerOptions.title("Current Position")
-//                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
-//                    currentMarker?.remove()
-//                    currentMarker = mMap.addMarker(markerOptions)
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location!!.latitude,
                             location!!.longitude), DEFAULT_ZOOM.toFloat()))
-                   // viewModel.getPoints(applicationContext, 5.0, 24.0, 0, 10000)
+                    if (initPoints) {
+//                        viewModel.getPoints(location.latitude, location.longitude, 0, 10000)
+                    }
                     binding.locations.text = "${location.latitude}, ${location.longitude}"
                 }
             }
@@ -127,16 +117,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 binding.speed.text = "${speed} km/h ?"
             }
 
-        bumpManager.onStart(this, locationManager)
-
+       /* bumpManager.onStart(this, locationManager)
         bumpManager.bumps
             .subscribe { locations ->
                 Log.i("BumpLocation",
                     "${locations.latitude}, ${locations.longitude}")
-            }
+            }*/
     }
 
-
+    private fun startManagers() {
+        locationManager.onStart(this)
+        bumpManager.onStart(this, locationManager)
+    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -164,36 +156,3 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.setMinZoomPreference(14f)
     }
 }
-
-/*
-private var sensorManager: SensorManager? = null
-var ax = 0.0
-var ay = 0.0
-var az = 0.0 // these are the acceleration in x,y and z axis
-
-public override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-    sensorManager = getSystemService(AppCompatActivity.SENSOR_SERVICE) as SensorManager
-    sensorManager!!.registerListener(
-        this,
-        sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-        SensorManager.SENSOR_DELAY_NORMAL
-    )
-}
-
-override fun onAccuracyChanged(arg0: Sensor?, arg1: Int) {}
-override fun onSensorChanged(event: SensorEvent) {
-    if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-        ax = event.values[0].toDouble()
-        ay = event.values[1].toDouble()
-        az = event.values[2].toDouble()
-
-        */
-/*Log.d(ax.toString(), ay.toString())*//*
-
-    }
-}
-*/
-
-

@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class InsertBumps (
     @SerializedName(DataConstants.KEY_BUMPS)
-    val bumps: List<InsertBump>
+    val bumps: Array<InsertBump>
 )

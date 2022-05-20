@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class BumpApi {
     private val retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2/")
+        .baseUrl("https://49d1-80-73-72-217.eu.ngrok.io/api/")
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()

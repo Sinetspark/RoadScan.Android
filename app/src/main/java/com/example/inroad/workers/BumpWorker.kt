@@ -36,7 +36,7 @@ class BumpWorker(
     private fun insertBumps() {
         bumpManager.bumps
             .blockingSubscribe { location ->
-                Log.i("раз", "${location.latitude}, ${location.longitude}")
+                Log.i("bump", "${location.latitude}, ${location.longitude}")
                 val bumps = listOf<InsertBump>(InsertBump(location.latitude, location.longitude, "", ""))
                 bumpInteractor.insertBumps(InsertBumps(bumps)).subscribe()
             }

@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class PointApi {
     //TO DO
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://f5cc-94-245-181-202.jp.ngrok.io/api/")
+        .baseUrl("https://49d1-80-73-72-217.eu.ngrok.io/api/")
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
