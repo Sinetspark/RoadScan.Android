@@ -1,17 +1,18 @@
 package com.example.inroad.ui
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModelProvider
 import com.example.inroad.R
 import com.example.inroad.databinding.ActivityMapsBinding
 import com.example.inroad.di.AppComponentProvider
-import com.example.inroad.managers.AccelerometerManager
 import com.example.inroad.managers.BumpManager
 import com.example.inroad.managers.LocationManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -20,7 +21,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -30,9 +32,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     @Inject
     lateinit var viewModelFactory: MainViewModel.Factory
 
- /*   private val viewModel: MainViewModel by viewModels {
+    private val viewModel: MainViewModel by viewModels {
         viewModelFactory
-    }*/
+    }
 
     private lateinit var mMap: GoogleMap
 
@@ -60,6 +62,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        viewModel.ping()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+            }, {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Ошибка")
+                builder.setMessage("Извините, сервис недоступен")
+                builder.setPositiveButton("Oк",
+                    DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+                val alert = builder.create()
+                alert.show()
+            });
 //        viewModel.liveData.observe(this) { state ->
 ////            binding.allMaterialtoolbarTopbar.title = state.title
 ////            binding.allTextviewTemperature.text = state.temperature
