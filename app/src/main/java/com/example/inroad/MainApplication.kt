@@ -5,6 +5,8 @@ import androidx.work.Configuration
 import com.example.inroad.di.AppComponent
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.di.DaggerAppComponent
+import io.reactivex.rxjava3.internal.functions.Functions.emptyConsumer
+import io.reactivex.rxjava3.plugins.RxJavaPlugins
 
 class MainApplication : Application(), AppComponentProvider, Configuration.Provider {
 
@@ -16,6 +18,7 @@ class MainApplication : Application(), AppComponentProvider, Configuration.Provi
         super.onCreate()
         _component = DaggerAppComponent.factory().create(this)
         component.inject(this)
+        RxJavaPlugins.setErrorHandler(emptyConsumer())
     }
 
     override fun getWorkManagerConfiguration(): Configuration =

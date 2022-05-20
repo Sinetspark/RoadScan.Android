@@ -2,7 +2,6 @@ package com.example.inroad.ui
 
 import android.content.Context
 import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,15 +10,18 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.example.inroad.di.AppComponent
+import com.example.inroad.domain.PingInteractor
 import com.example.inroad.domain.PointInteractor
 import com.example.inroad.workers.TestWorker
 import io.reactivex.rxjava3.schedulers.Schedulers
 import com.example.inroad.domain.entities.Point
+import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 
 class MainViewModel @Inject constructor(
-    private val pointInteractor: PointInteractor
+    private val pointInteractor: PointInteractor,
+    private val pingInteractor: PingInteractor
 ) : ViewModel() {
 
     companion object {
@@ -66,6 +68,10 @@ class MainViewModel @Inject constructor(
         } catch (e: Exception) {
             Log.i("tagerror", "error")
         }
+    }
+
+    fun ping(): Observable<Void> {
+        return pingInteractor.getPing()
     }
 
     class Factory @Inject constructor(private val viewModel: MainViewModel) : ViewModelProvider.Factory {
