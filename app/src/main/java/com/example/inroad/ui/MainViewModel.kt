@@ -2,7 +2,6 @@ package com.example.inroad.ui
 
 import android.content.Context
 import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.example.inroad.di.AppComponent
 import com.example.inroad.domain.PointInteractor
-import com.example.inroad.workers.TestWorker
+import com.example.inroad.workers.BumpWorker
 import io.reactivex.rxjava3.schedulers.Schedulers
 import com.example.inroad.domain.entities.Point
 import javax.inject.Inject
@@ -43,7 +42,7 @@ class MainViewModel @Inject constructor(
             .beginUniqueWork(
                 "SuperDuperLocationSender",
                 ExistingWorkPolicy.REPLACE,
-                OneTimeWorkRequest.from(TestWorker::class.java)
+                OneTimeWorkRequest.from(BumpWorker::class.java)
             )
             .enqueue()
     }

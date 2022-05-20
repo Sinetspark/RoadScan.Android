@@ -2,7 +2,7 @@ package com.example.inroad.di
 
 import android.content.Context
 import androidx.work.WorkerParameters
-import com.example.inroad.workers.TestWorker
+import com.example.inroad.workers.BumpWorker
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Scope
@@ -14,7 +14,7 @@ import javax.inject.Scope
 @WorkerComponent.WorkerScope
 interface WorkerComponent {
 
-    fun locationWorker(): TestWorker
+    fun bumpWorker(): BumpWorker
 
     @Component.Factory
     interface Factory {

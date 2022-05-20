@@ -10,45 +10,35 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import com.example.inroad.managers.LocationManager
-import com.example.inroad.domain.PointInteractor
+import com.example.inroad.data.dto.InsertBump
+import com.example.inroad.data.dto.InsertBumps
+import com.example.inroad.domain.BumpInteractor
+import com.example.inroad.managers.BumpManager
 
-class TestWorker (
+class BumpWorker(
     appContext: Context,
     workerParams: WorkerParameters,
-    private val locationManager: LocationManager
+    private val bumpManager: BumpManager
     ) : Worker(appContext, workerParams) {
 
     private val notificationManager
         get() = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        private val interactor = PointInteractor()
+        private val bumpInteractor = BumpInteractor()
 
     override fun doWork(): Result {
         // Mark the Worker as important
         setForegroundAsync(createForegroundInfo())
         //блокирующая задача
-        //testWork()
-        updateLocation()
+        insertBumps()
         return Result.success()
     }
 
-   /* private fun testWork() {
-        runBlocking {
-            repeat(1000) {
-                if (!isStopped) {
-                    interactor.postLocation(Random.nextDouble(), Random.nextDouble())
-                        .subscribe()
-                            Log.i("раз", "два")
-                    delay(1000)
-                }
-            }
-        }
-    }*/
-
-    private fun updateLocation() {
-        locationManager.locations
+    private fun insertBumps() {
+        bumpManager.bumps
             .blockingSubscribe { location ->
                 Log.i("раз", "${location.latitude}, ${location.longitude}")
+                val bumps = listOf<InsertBump>(InsertBump(location.latitude, location.longitude, "", ""))
+                bumpInteractor.insertBumps(InsertBumps(bumps)).subscribe()
             }
     }
 
