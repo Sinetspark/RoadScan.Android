@@ -1,10 +1,11 @@
 package com.example.inroad.domain
 
 import com.example.inroad.data.PingRepository
-import com.example.inroad.data.dto.InsertBumps
 import io.reactivex.rxjava3.core.Observable
+import javax.inject.Inject
 
-class PingInteractor {
+
+class PingInteractor @Inject constructor() {
     private val repository: PingRepository = PingRepository()
 
     fun getPing(): Observable<Void> = repository.getPing()
