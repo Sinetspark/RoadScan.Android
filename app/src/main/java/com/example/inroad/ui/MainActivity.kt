@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.inroad.R
-import com.example.inroad.databinding.ActivityMainBinding
+import com.example.inroad.databinding.ActivityMapsBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.AccelerometerManager
 import com.example.inroad.managers.BumpManager
@@ -25,14 +25,14 @@ import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMapsBinding
 
     @Inject
     lateinit var viewModelFactory: MainViewModel.Factory
 
-    private val viewModel: MainViewModel by viewModels {
+ /*   private val viewModel: MainViewModel by viewModels {
         viewModelFactory
-    }
+    }*/
 
     private lateinit var mMap: GoogleMap
 
@@ -50,7 +50,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_maps)
+        // setContentView(R.layout.activity_maps)
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val component = (applicationContext as AppComponentProvider).component
         component.inject(this)
@@ -71,18 +73,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //            }
 //        }
 
-        /*binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         // Сначала создаем подписку на изменение состояния экрана
 
         // Затем вызываем у viewModel колбэк onCreated оповещая viewModel что подготовительные работы завершены
         // Эта проверка на savedInstanceState здесь нужна чтобы onInitiallyCreated вызвался только при первом старте экрана
-        if (savedInstanceState == null) {
-            viewModel.onInitiallyCreated(component, applicationContext)
-        }
-        binding.allButtonService.setOnClickListener {
-            viewModel.onServiceButtonClicked(applicationContext)
-        }*/
+//        if (savedInstanceState == null) {
+//            viewModel.onInitiallyCreated(component, applicationContext)
+//        }
+//        binding.allButtonService.setOnClickListener {
+//            viewModel.onServiceButtonClicked(applicationContext)
+//        }*/
     }
 
     override fun onStart() {
@@ -102,21 +102,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         LatLng(location!!.latitude,
                             location!!.longitude), DEFAULT_ZOOM.toFloat()))
                    // viewModel.getPoints(applicationContext, 5.0, 24.0, 0, 10000)
+                    binding.locations.text = "${location.latitude}, ${location.longitude}"
                 }
             }
-//        accelerometerManager.onStart(this)
-//        accelerometerManager.spreads
-//            .subscribe { spread ->
-//                Log.i("SensorChanged",
-//                    "${spread[0]}, ${spread[1]}, ${spread[2]}")
-       //     }
+
+        locationManager.speed
+            .subscribe {
+                speed ->
+                binding.speed.text = "${speed} km/h ?"
+            }
+
         bumpManager.onStart(this, locationManager)
+
         bumpManager.bumps
             .subscribe { locations ->
                 Log.i("BumpLocation",
                     "${locations.latitude}, ${locations.longitude}")
             }
     }
+
+
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
