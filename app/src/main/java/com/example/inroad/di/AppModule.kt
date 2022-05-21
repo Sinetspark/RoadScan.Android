@@ -32,7 +32,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providesBumpInteractor(context: Context): BumpInteractor {
-        return BumpInteractor(context)
+    fun providesBumpInteractor(): BumpInteractor {
+        return BumpInteractor()
     }
 }

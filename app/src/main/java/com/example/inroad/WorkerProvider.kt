@@ -6,7 +6,7 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.example.inroad.di.AppComponent
 import com.example.inroad.di.DaggerWorkerComponent
-import com.example.inroad.workers.TestWorker
+import com.example.inroad.workers.BumpWorker
 
 class WorkerProvider constructor(private val appComponent: AppComponent) : WorkerFactory() {
     override fun createWorker(
@@ -17,7 +17,7 @@ class WorkerProvider constructor(private val appComponent: AppComponent) : Worke
         val workerComponent = DaggerWorkerComponent.factory().create(appComponent, workerParameters, appContext)
 
         return when(workerClassName) {
-            TestWorker::class.qualifiedName -> workerComponent.locationWorker()
+            BumpWorker::class.qualifiedName -> workerComponent.bumpWorker()
             else -> null
         }
     }

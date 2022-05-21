@@ -10,45 +10,36 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import com.example.inroad.managers.LocationManager
-import com.example.inroad.domain.PointInteractor
+import com.example.inroad.data.dto.InsertBump
+import com.example.inroad.data.dto.InsertBumps
+import com.example.inroad.domain.BumpInteractor
+import com.example.inroad.managers.BumpManager
 
-class TestWorker (
+class BumpWorker(
     appContext: Context,
     workerParams: WorkerParameters,
-    private val locationManager: LocationManager
+    private val bumpManager: BumpManager
     ) : Worker(appContext, workerParams) {
 
     private val notificationManager
         get() = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        private val interactor = PointInteractor()
+        private val bumpInteractor = BumpInteractor()
 
     override fun doWork(): Result {
         // Mark the Worker as important
         setForegroundAsync(createForegroundInfo())
         //блокирующая задача
-        //testWork()
-        updateLocation()
+        insertBumps()
         return Result.success()
     }
 
-   /* private fun testWork() {
-        runBlocking {
-            repeat(1000) {
-                if (!isStopped) {
-                    interactor.postLocation(Random.nextDouble(), Random.nextDouble())
-                        .subscribe()
-                            Log.i("раз", "два")
-                    delay(1000)
-                }
-            }
-        }
-    }*/
-
-    private fun updateLocation() {
-        locationManager.locations
+    private fun insertBumps() {
+        bumpManager.bumps
             .blockingSubscribe { location ->
-                Log.i("раз", "${location.latitude}, ${location.longitude}")
+                Log.i("bump", "${location.latitude}, ${location.longitude}")
+                val bumps = arrayListOf<InsertBump>(InsertBump(location.latitude,
+                    location.longitude, "", ""))
+                bumpInteractor.insertBumps(InsertBumps(bumps)).subscribe()
             }
     }
 
@@ -56,9 +47,9 @@ class TestWorker (
     private fun createForegroundInfo(): ForegroundInfo {
         // Build a notification using bytesRead and contentLength
         val context = applicationContext
-        val id = "123"
-        val title = "Foreground Title"
-        val cancel = "Cancel Button"
+        val id = "bumpId"
+        val title = "Выявление неровностей"
+        val cancel = "Отмена"
         // This PendingIntent can be used to cancel the worker
         val intent = WorkManager.getInstance(context)
             .createCancelPendingIntent(getId())
@@ -67,7 +58,7 @@ class TestWorker (
         }
         val notification: Notification = NotificationCompat.Builder(context, id)
             .setContentTitle(title)
-            .setChannelId("Super puper unique id")
+            .setChannelId("Bump unique id")
             .setTicker(title)
             .setSmallIcon(android.R.drawable.ic_menu_call)
             .setOngoing(true) // Add the cancel action to the notification which can
@@ -79,10 +70,10 @@ class TestWorker (
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createChannel() {
-        val name = "Channel Name"
-        val descriptionText = "Description of channel"
+        val name = "Bump"
+        val descriptionText = "Insert bumps"
         val importance = NotificationManager.IMPORTANCE_MIN
-        val mChannel = NotificationChannel("Super puper unique id", name, importance)
+        val mChannel = NotificationChannel("Bump unique id", name, importance)
         mChannel.description = descriptionText
         // Register the channel with the system; you can't change the importance
         // or other notification behaviors after this

@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface PingService {
 
-    @GET("Ping/GetPing")
+    @GET("Ping")
     fun getPing(): Observable<Void>
 }

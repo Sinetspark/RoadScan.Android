@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class PingApi {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://f5cc-94-245-181-202.jp.ngrok.io/api/")
+        .baseUrl(Environments.API_URL + "/api/")
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()

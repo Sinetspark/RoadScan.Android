@@ -70,7 +70,7 @@ class LocationManager (
         val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 locationSubject.onNext(location)
-                speedSubject.onNext(location.speed)
+                speedSubject.onNext((location.speed * 3600) / 1000)
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?)
