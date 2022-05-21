@@ -46,7 +46,7 @@ class MainViewModel @Inject constructor(
     fun onBumpManagerStart(context: Context) {
         WorkManager.getInstance(context)
             .beginUniqueWork(
-                "SuperDuperLocationSender",
+                "BumpSender",
                 ExistingWorkPolicy.REPLACE,
                 OneTimeWorkRequest.from(BumpWorker::class.java)
             )
@@ -54,23 +54,19 @@ class MainViewModel @Inject constructor(
     }
 
     fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int) {
-        try {
-            pointInteractor.getPoints(latitude, longitude, minDistance, maxDistance)
-                .map { points ->
-                    val result = mutableListOf<Point>()
-                    for (point in points) {
-                        if (!_existingPoints.contains(point.id)) {
-                            result.add(point)
-                            _existingPoints.add(point.id)
-                        }
+        pointInteractor.getPoints(latitude, longitude, minDistance, maxDistance)
+            .map { points ->
+                val result = mutableListOf<Point>()
+                for (point in points) {
+                    if (!_existingPoints.contains(point.id)) {
+                        result.add(point)
+                        _existingPoints.add(point.id)
                     }
-                    MapUiState(result)
                 }
-                .subscribeOn(Schedulers.io())
-                .subscribe(_mapData::postValue)
-        } catch (e: Exception) {
-            Log.i("tagerror", "error")
-        }
+                MapUiState(result)
+            }
+            .subscribeOn(Schedulers.io())
+            .subscribe(_mapData::postValue)
     }
 
     fun ping() {

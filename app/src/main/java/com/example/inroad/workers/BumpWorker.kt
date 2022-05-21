@@ -37,7 +37,8 @@ class BumpWorker(
         bumpManager.bumps
             .blockingSubscribe { location ->
                 Log.i("bump", "${location.latitude}, ${location.longitude}")
-                val bumps = listOf<InsertBump>(InsertBump(location.latitude, location.longitude, "", ""))
+                val bumps = arrayListOf<InsertBump>(InsertBump(location.latitude,
+                    location.longitude, "", ""))
                 bumpInteractor.insertBumps(InsertBumps(bumps)).subscribe()
             }
     }
@@ -46,9 +47,9 @@ class BumpWorker(
     private fun createForegroundInfo(): ForegroundInfo {
         // Build a notification using bytesRead and contentLength
         val context = applicationContext
-        val id = "123"
-        val title = "Foreground Title"
-        val cancel = "Cancel Button"
+        val id = "bumpId"
+        val title = "Выявление неровностей"
+        val cancel = "Отмена"
         // This PendingIntent can be used to cancel the worker
         val intent = WorkManager.getInstance(context)
             .createCancelPendingIntent(getId())
@@ -57,7 +58,7 @@ class BumpWorker(
         }
         val notification: Notification = NotificationCompat.Builder(context, id)
             .setContentTitle(title)
-            .setChannelId("Super puper unique id")
+            .setChannelId("Bump unique id")
             .setTicker(title)
             .setSmallIcon(android.R.drawable.ic_menu_call)
             .setOngoing(true) // Add the cancel action to the notification which can
@@ -69,10 +70,10 @@ class BumpWorker(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createChannel() {
-        val name = "Channel Name"
-        val descriptionText = "Description of channel"
+        val name = "Bump"
+        val descriptionText = "Insert bumps"
         val importance = NotificationManager.IMPORTANCE_MIN
-        val mChannel = NotificationChannel("Super puper unique id", name, importance)
+        val mChannel = NotificationChannel("Bump unique id", name, importance)
         mChannel.description = descriptionText
         // Register the channel with the system; you can't change the importance
         // or other notification behaviors after this

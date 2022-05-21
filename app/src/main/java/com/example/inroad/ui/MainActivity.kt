@@ -3,14 +3,14 @@ package com.example.inroad.ui
 import android.Manifest
 import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+import com.example.inroad.R
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.example.inroad.R
 import com.example.inroad.databinding.ActivityMapsBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.BumpManager
@@ -20,32 +20,25 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
-
-    @Inject
-    lateinit var viewModelFactory: MainViewModel.Factory
-
-    private val viewModel: MainViewModel by viewModels {
-        viewModelFactory
-    }
-
     private lateinit var mMap: GoogleMap
-
-    private var currentMarker: Marker? = null
     private val DEFAULT_ZOOM = 15
     private var initPoints = false;
 
     @Inject
-    lateinit var locationManager: LocationManager
+    lateinit var viewModelFactory: MainViewModel.Factory
+    private val viewModel: MainViewModel by viewModels {
+        viewModelFactory
+    }
 
-//    @Inject
-//    lateinit var accelerometerManager: AccelerometerManager
+    @Inject
+    lateinit var locationManager: LocationManager
 
     @Inject
     lateinit var bumpManager: BumpManager
@@ -59,16 +52,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        viewModel.ping()
         viewModel.pingData.observe(this) {
             state ->
             if (!state.success) {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Ошибка")
-                builder.setMessage("Извините, сервис временно недоступен")
-                builder.setPositiveButton("Oк",
-                    DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
-                builder.show()
+                alertWithOk("Ошибка", "Извините, сервис временно недоступен")
             } else {
                 startManagers()
                 viewModel.onBumpManagerStart(applicationContext)
@@ -83,17 +70,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 )
             }
         }
-
-        // Сначала создаем подписку на изменение состояния экрана
-
-        // Затем вызываем у viewModel колбэк onCreated оповещая viewModel что подготовительные работы завершены
-        // Эта проверка на savedInstanceState здесь нужна чтобы onInitiallyCreated вызвался только при первом старте экрана
-//        if (savedInstanceState == null) {
-//            viewModel.onInitiallyCreated(component, applicationContext)
-//        }
-//        binding.allButtonService.setOnClickListener {
-//            viewModel.onServiceButtonClicked(applicationContext)
-//        }*/
+        viewModel.ping()
     }
 
     override fun onStart() {
@@ -105,7 +82,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         LatLng(location!!.latitude,
                             location!!.longitude), DEFAULT_ZOOM.toFloat()))
                     if (initPoints) {
-//                        viewModel.getPoints(location.latitude, location.longitude, 0, 10000)
+                        viewModel.getPoints(location.latitude, location.longitude, 0, 10000)
                     }
                     binding.locations.text = "${location.latitude}, ${location.longitude}"
                 }
@@ -114,15 +91,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         locationManager.speed
             .subscribe {
                 speed ->
-                binding.speed.text = "${speed} km/h ?"
+                binding.speed.text = "${speed} km/h"
             }
-
-       /* bumpManager.onStart(this, locationManager)
-        bumpManager.bumps
-            .subscribe { locations ->
-                Log.i("BumpLocation",
-                    "${locations.latitude}, ${locations.longitude}")
-            }*/
     }
 
     private fun startManagers() {
@@ -154,5 +124,29 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = true
         mMap.setMinZoomPreference(6f)
         mMap.setMinZoomPreference(14f)
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            val success = googleMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    this, R.raw.style_json
+                )
+            )
+            if (!success) {
+                // Log.e(TAG, "Style parsing failed.")
+            }
+        } catch (e: Resources.NotFoundException) {
+            // Log.e(TAG, "Can't find style. Error: ", e)
+        }
+    }
+
+    private fun alertWithOk(title: String, message: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton("Oк",
+            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+        builder.show()
     }
 }

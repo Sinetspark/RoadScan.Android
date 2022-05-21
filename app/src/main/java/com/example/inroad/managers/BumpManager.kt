@@ -10,6 +10,9 @@ import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class BumpManager(
     context: Context
@@ -32,14 +35,16 @@ class BumpManager(
             .combineLatest(observers, Function {
                 Bump(it[0] as Float, it[1] as Location, it[2] as FloatArray)
             })
-           // .filter { it.speed > 5 } // todo km/h
+            // .filter { it.speed > 5 } // todo km/h
             .subscribeOn(Schedulers.io())
             .subscribe { bump ->
                 var spreads = bump.spreads
-                var currentSquare = Math.sqrt(Math.pow(spreads[0].toDouble(), 2.0) + Math.pow(spreads[1].toDouble(), 2.0) + Math.pow(spreads[2].toDouble(), 2.0))
+                var currentSquare = sqrt(spreads[0].toDouble().pow(2.0) + spreads[1].toDouble()
+                    .pow(2.0) + spreads[2].toDouble().pow(2.0)
+                )
                 if (previousSquare != null) {
-                    var result = Math.abs(previousSquare!!) - Math.abs(currentSquare)
-                    if (Math.abs(result) > 0.05) {
+                    var result = abs(previousSquare!!) - abs(currentSquare)
+                    if (abs(result) > 0.05) {
                         bumpSubject.onNext(bump.locations)
                     }
                 }

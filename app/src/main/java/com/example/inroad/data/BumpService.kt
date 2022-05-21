@@ -8,6 +8,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface BumpService {
-    @POST("/Bump/InsertBumps")
+    @POST("Bump/InsertBumps")
     fun insertBumps(@Body insertBumps: InsertBumps): Observable<Void>
 }
