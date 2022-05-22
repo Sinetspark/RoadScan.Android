@@ -17,7 +17,6 @@ import kotlin.math.sqrt
 class BumpManager(
     context: Context
 )  {
-
     lateinit var accelerometerManager: AccelerometerManager
     private val bumpSubject by lazy { BehaviorSubject.create<Location>() }
     val bumps: Observable<Location> = bumpSubject

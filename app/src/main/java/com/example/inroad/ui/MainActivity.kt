@@ -1,16 +1,19 @@
 package com.example.inroad.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.example.inroad.R
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.inroad.databinding.ActivityMapsBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.BumpManager
@@ -28,8 +31,10 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
     private lateinit var mMap: GoogleMap
-    private val DEFAULT_ZOOM = 15
-    private var initPoints = false;
+    private val defaultZoom = 15
+    private var initPoints = false
+    private val maxDistance = 10000
+    private val minDistance = 0
 
     @Inject
     lateinit var viewModelFactory: MainViewModel.Factory
@@ -75,19 +80,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
+        locationManager.onStart(this)
         locationManager.locations
             .subscribe { location ->
                 if (mMap != null) {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location!!.latitude,
-                            location!!.longitude), DEFAULT_ZOOM.toFloat()))
+                            location!!.longitude), defaultZoom.toFloat()))
                     if (initPoints) {
-                        viewModel.getPoints(location.latitude, location.longitude, 0, 10000)
+                        viewModel.getPoints(location.latitude, location.longitude, minDistance, maxDistance)
                     }
                     binding.locations.text = "${location.latitude}, ${location.longitude}"
                 }
             }
-
         locationManager.speed
             .subscribe {
                 speed ->
@@ -96,30 +101,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun startManagers() {
-        locationManager.onStart(this)
         bumpManager.onStart(this, locationManager)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-        mMap.isMyLocationEnabled = true
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isCompassEnabled = true
         mMap.setMinZoomPreference(6f)
@@ -139,6 +125,37 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         } catch (e: Resources.NotFoundException) {
             // Log.e(TAG, "Can't find style. Error: ", e)
         }
+        enableCurrentLocation()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // permission was granted, yay! Do the
+            // location-related task you need to do.
+            enableCurrentLocation()
+        }
+    }
+
+    private fun enableCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        mMap.isMyLocationEnabled = true
     }
 
     private fun alertWithOk(title: String, message: String) {
