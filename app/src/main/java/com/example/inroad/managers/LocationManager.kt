@@ -1,6 +1,7 @@
 package com.example.inroad.managers
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -42,9 +43,11 @@ class LocationManager (
                 when {
                     permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
                         Toast.makeText(activity, "Спасибо за разрешение!", Toast.LENGTH_SHORT).show()
+                        setLocationListener()
                     }
                     permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
                         Toast.makeText(activity, "Примерно - это неплохо, но хотелось бы точнее", Toast.LENGTH_SHORT).show()
+                        setLocationListener()
                     }
                     else -> {
                         Toast.makeText(activity, "Нам очень необходимо это разрешение", Toast.LENGTH_SHORT).show()
@@ -58,8 +61,13 @@ class LocationManager (
                 )
             )
             return
+        } else {
+            setLocationListener()
         }
+    }
 
+    @SuppressLint("MissingPermission")
+    private fun setLocationListener() {
         val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
                 locationSubject.onNext(location)

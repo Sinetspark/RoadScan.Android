@@ -90,13 +90,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (initPoints) {
                         viewModel.getPoints(location.latitude, location.longitude, minDistance, maxDistance)
                     }
-                    binding.locations.text = "${location.latitude}, ${location.longitude}"
+                    binding.locations.text = "Локация: ${location.latitude}, ${location.longitude}"
                 }
             }
         locationManager.speed
             .subscribe {
                 speed ->
-                binding.speed.text = "${speed} km/h"
+                binding.speed.text = "Скорость: ${speed} km/h"
             }
     }
 
