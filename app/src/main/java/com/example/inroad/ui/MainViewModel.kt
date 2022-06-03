@@ -2,6 +2,9 @@ package com.example.inroad.ui
 
 import android.content.Context
 import android.content.DialogInterface
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
@@ -32,15 +35,17 @@ class MainViewModel @Inject constructor(
     private val _existingPoints: HashSet<String> = HashSet<String>()
     private val _pingData: MutableLiveData<PingState> = MutableLiveData<PingState>()
     private val _mapData: MutableLiveData<MapUiState> = MutableLiveData<MapUiState>()
+    private val _connectionData: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     val mapData: LiveData<MapUiState> = _mapData
     val pingData: LiveData<PingState> = _pingData
+    val connectionData: LiveData<Boolean> = _connectionData
 
     /**
      * Метод вызывается когда activity завершит подготовительные работы. Затем метод идет в интерактор за данными,
      * которые потом преобразуются в данные ui слоя, которые удобно устанавливать для экрана
      */
     fun onInitiallyCreated(component: AppComponent, context: Context) {
-        component.inject(this)
+        //component.inject(this)
     }
 
     fun onBumpManagerStart(context: Context) {
@@ -51,6 +56,38 @@ class MainViewModel @Inject constructor(
                 OneTimeWorkRequest.from(BumpWorker::class.java)
             )
             .enqueue()
+    }
+
+    fun defaultConnection(context: Context) {
+        val cm = context.getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val network = cm.activeNetwork;
+        _connectionData.postValue(network != null)
+    }
+
+
+    public val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        // network is available for use
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            _connectionData.postValue(true);
+        }
+
+        // Network capabilities have changed for the network
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities
+        ) {
+            super.onCapabilitiesChanged(network, networkCapabilities)
+            val unmetered = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+        }
+
+        // lost network connection
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            _connectionData.postValue(false);
+        }
     }
 
     fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int) {
