@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.location.Location
 import android.os.Build
 import android.util.Log
 import androidx.annotation.NonNull
@@ -13,6 +14,7 @@ import androidx.work.*
 import com.example.inroad.data.dto.InsertBump
 import com.example.inroad.data.dto.InsertBumps
 import com.example.inroad.domain.BumpInteractor
+import com.example.inroad.domain.entities.Point
 import com.example.inroad.managers.BumpManager
 
 class BumpWorker(
@@ -34,12 +36,18 @@ class BumpWorker(
     }
 
     private fun insertBumps() {
+        val bumpLocations = arrayListOf<InsertBump>()
         bumpManager.bumps
             .blockingSubscribe { location ->
                 Log.i("bump", "${location.latitude}, ${location.longitude}")
-                val bumps = arrayListOf<InsertBump>(InsertBump(location.latitude,
+                bumpLocations.add(InsertBump(location.latitude,
                     location.longitude, "", ""))
-                bumpInteractor.insertBumps(InsertBumps(bumps)).subscribe()
+                if (bumpLocations.count() >= 10) {
+                    bumpInteractor.insertBumps(InsertBumps(bumpLocations))
+                        .subscribe()
+                    bumpLocations.clear()
+                    Log.i("insert bumps", "insert new > 10 bumps")
+                }
             }
     }
 
