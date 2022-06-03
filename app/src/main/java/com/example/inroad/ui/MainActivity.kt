@@ -5,6 +5,9 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -76,6 +79,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         viewModel.ping()
+
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        val connectivityManager = this.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
+        connectivityManager.requestNetwork(networkRequest, viewModel.networkCallback)
+
+        viewModel.connectionData.observe(this) { isConnected ->
+            if (!isConnected) {
+                alertWithOk("Связь", "У вас пропал интернет")
+            }
+        }
+
+        viewModel.defaultConnection(this)
+
     }
 
     override fun onStart() {
