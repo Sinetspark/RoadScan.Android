@@ -65,8 +65,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             if (!state.success) {
                 alertWithOk("Ошибка", "Извините, сервис временно недоступен")
             } else {
+                alertAccelerometr("Разрешить приложению отправлять данные аккселерометра?")
                 startManagers()
-                viewModel.onBumpManagerStart(applicationContext)
+                viewModel.onBumpWorkerStart(applicationContext)
                 initPoints = true
             }
         }
@@ -184,6 +185,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         builder.setMessage(message)
         builder.setPositiveButton("Oк",
             DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+        builder.show()
+    }
+
+    private fun alertAccelerometr(message: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton("Oк",
+            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+        builder.setNegativeButton("Cancel",
+            DialogInterface.OnClickListener { dialog, which -> dialog.cancel()})
         builder.show()
     }
 }

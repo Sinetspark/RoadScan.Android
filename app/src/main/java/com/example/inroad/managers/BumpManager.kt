@@ -43,7 +43,7 @@ class BumpManager(
                 )
                 if (previousSquare != null) {
                     var result = abs(previousSquare!!) - abs(currentSquare)
-                    if (abs(result) > 0.05) {
+                    if (abs(result) > 20) {
                         bumpSubject.onNext(bump.locations)
                     }
                 }
