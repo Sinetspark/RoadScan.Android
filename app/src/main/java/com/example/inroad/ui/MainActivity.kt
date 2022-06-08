@@ -66,8 +66,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 alertWithOk("Ошибка", "Извините, сервис временно недоступен")
             } else {
                 alertAccelerometr("Разрешить приложению отправлять данные аккселерометра?")
-                startManagers()
-                viewModel.onBumpWorkerStart(applicationContext)
+                startBumps()
                 initPoints = true
             }
         }
@@ -121,8 +120,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
     }
 
-    private fun startManagers() {
+    private fun startBumps() {
         bumpManager.onStart(this, locationManager)
+        viewModel.onBumpWorkerStart(applicationContext)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
