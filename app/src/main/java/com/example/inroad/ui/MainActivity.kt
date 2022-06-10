@@ -66,7 +66,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 alertWithOk("Ошибка", "Извините, сервис временно недоступен")
             } else {
                 alertAccelerometr("Разрешить приложению отправлять данные аккселерометра?")
-                startBumps()
                 initPoints = true
             }
         }
@@ -193,7 +192,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         builder.setTitle(title)
         builder.setMessage(message)
         builder.setPositiveButton("Oк",
-            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+            DialogInterface.OnClickListener { dialog, which ->
+                Toast.makeText(this, "Спасибо за разрешение!", Toast.LENGTH_SHORT).show()
+                startBumps() })
         builder.setNegativeButton("Cancel",
             DialogInterface.OnClickListener { dialog, which -> dialog.cancel()})
         builder.show()
