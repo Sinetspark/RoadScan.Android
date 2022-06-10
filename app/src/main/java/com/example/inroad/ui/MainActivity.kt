@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.location.Location
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
@@ -28,12 +29,14 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
     private lateinit var mMap: GoogleMap
+    private var currentLocation: Location? = null
     private val defaultZoom = 15
     private var initPoints = false
     private val maxDistance = 10000
@@ -95,7 +98,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         viewModel.defaultConnection(this)
-
     }
 
     override fun onStart() {
@@ -104,13 +106,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         locationManager.locations
             .subscribe { location ->
                 if (mMap != null) {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        LatLng(location!!.latitude,
-                            location!!.longitude), defaultZoom.toFloat()))
                     if (initPoints) {
-                        viewModel.getPoints(location.latitude, location.longitude, minDistance, maxDistance)
+                        if (currentLocation == null) {
+                            currentLocation = location
+                            viewModel.getPoints(location.latitude, location.longitude, minDistance, maxDistance)
+                        }
+                        else {
+                            var distance = currentLocation!!.distanceTo(location)
+                            if (distance > 2000) {
+                                currentLocation = location
+                                viewModel.getPoints(location.latitude, location.longitude, minDistance, maxDistance)
+                            }
+                        }
                     }
                     binding.locations.text = "Локация: ${location.latitude}, ${location.longitude}"
+                    /* mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                        LatLng(location!!.latitude,
+                            location!!.longitude), defaultZoom.toFloat()))*/
                 }
             }
         locationManager.speed
