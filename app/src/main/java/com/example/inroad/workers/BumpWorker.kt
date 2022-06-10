@@ -16,6 +16,7 @@ import com.example.inroad.data.dto.InsertBumps
 import com.example.inroad.domain.BumpInteractor
 import com.example.inroad.domain.entities.Point
 import com.example.inroad.managers.BumpManager
+import com.example.inroad.R
 
 class BumpWorker(
     appContext: Context,
@@ -68,7 +69,7 @@ class BumpWorker(
             .setContentTitle(title)
             .setChannelId("Bump unique id")
             .setTicker(title)
-            .setSmallIcon(android.R.drawable.ic_menu_call)
+            .setSmallIcon(R.drawable.ic_stat_name)
             .setOngoing(true) // Add the cancel action to the notification which can
             // be used to cancel the worker
             .addAction(android.R.drawable.ic_delete, cancel, intent)
