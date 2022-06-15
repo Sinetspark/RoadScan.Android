@@ -1,22 +1,22 @@
 package com.example.inroad.ui
 
 import android.Manifest
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.util.Log
+import android.preference.PreferenceManager
 import android.widget.Toast
-import com.example.inroad.R
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import com.example.inroad.R
 import com.example.inroad.databinding.ActivityMapsBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.BumpManager
@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var initPoints = false
     private val maxDistance = 10000
     private val minDistance = 0
+    private val accelerometerPermissionKey = "accelerometerPermissionKey"
 
     @Inject
     lateinit var viewModelFactory: MainViewModel.Factory
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             if (!state.success) {
                 alertWithOk("Ошибка", "Извините, сервис временно недоступен")
             } else {
-                alertAccelerometr("Разрешить приложению отправлять данные аккселерометра?")
+                accelerometerPermissionRequested()
                 initPoints = true
             }
         }
@@ -95,6 +96,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         viewModel.defaultConnection(this)
 
+    }
+
+    private fun accelerometerPermissionRequested(){
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        val accelerometerPermissionRequested = sharedPref?.contains(accelerometerPermissionKey)
+        if (accelerometerPermissionRequested == true) {
+            val accelerometerPermitted = readBooleanFromStorage(accelerometerPermissionKey)
+            if (accelerometerPermitted) {
+                startBumps()
+            }
+        } else {
+            alertAccelerometer("Разрешить приложению отправлять данные аккселерометра?")
+        }
     }
 
     override fun onStart() {
@@ -187,16 +201,63 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         builder.show()
     }
 
-    private fun alertAccelerometr(message: String) {
+/*    fun accelerometrAccess(private val context: Context) {
+        private val settings: SharedPreferences
+        private val keyAccelereometr = "access"
+        fun setAppInPurchasedMode(status: String) {
+            if (status == "successful") {
+                settings.edit().putBoolean(keyAccelereometr, true).commit()
+            } else if (status == "failed") {
+                settings.edit().putBoolean(keyAccelereometr, false).commit()
+            }
+        }
+
+        fun accelerometrIsAccess(): Boolean {
+            var access = false
+            if (settings.getBoolean(keyAccelereometr, false)) {
+                access = true
+            }
+            return access
+        }
+
+        init {
+            settings = PreferenceManager.getDefaultSharedPreferences(context)
+        }
+    }*/
+
+    private fun saveBooleanToStorage(key: String, value: Boolean) {
+        val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putBoolean(key, value)
+            apply()
+        }
+    }
+
+    private fun readBooleanFromStorage(key: String): Boolean {
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        if (sharedPref != null) {
+            return sharedPref?.getBoolean(key, false)
+        }
+        return false
+    }
+
+    private fun alertAccelerometer(message: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(title)
         builder.setMessage(message)
-        builder.setPositiveButton("Oк",
+        builder.setPositiveButton("Разрешить",
             DialogInterface.OnClickListener { dialog, which ->
                 Toast.makeText(this, "Спасибо за разрешение!", Toast.LENGTH_SHORT).show()
-                startBumps() })
-        builder.setNegativeButton("Cancel",
-            DialogInterface.OnClickListener { dialog, which -> dialog.cancel()})
+                startBumps()
+                saveBooleanToStorage(accelerometerPermissionKey, true)
+            })
+        builder.setNegativeButton("Отклонить",
+            DialogInterface.OnClickListener { dialog, which ->
+                saveBooleanToStorage(accelerometerPermissionKey, false)
+                dialog.cancel()
+            })
         builder.show()
     }
+
+
 }
