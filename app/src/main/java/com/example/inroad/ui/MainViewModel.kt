@@ -48,7 +48,7 @@ class MainViewModel @Inject constructor(
         //component.inject(this)
     }
 
-    fun onBumpManagerStart(context: Context) {
+    fun onBumpWorkerStart(context: Context) {
         WorkManager.getInstance(context)
             .beginUniqueWork(
                 "BumpSender",
