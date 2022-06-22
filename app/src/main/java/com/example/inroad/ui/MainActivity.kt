@@ -29,6 +29,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.shashank.sony.fancytoastlib.FancyToast
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
@@ -142,6 +143,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .subscribe {
                 speed ->
                 binding.speed.text = "Скорость: ${speed} km/h"
+            }
+        bumpManager.bumps
+            .subscribe{
+                bumpLocation ->
+                FancyToast.makeText(this,"Неровность обнаружена",FancyToast.LENGTH_LONG,FancyToast.INFO,false).show()
             }
     }
 
