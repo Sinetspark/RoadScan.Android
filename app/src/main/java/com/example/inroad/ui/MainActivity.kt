@@ -1,9 +1,9 @@
 package com.example.inroad.ui
 
+//import com.shashank.sony.fancytoastlib.FancyToast
 import android.Manifest
-import android.content.Context
 import android.content.DialogInterface
-import android.content.SharedPreferences
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Location
@@ -11,7 +11,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -22,15 +21,12 @@ import com.example.inroad.databinding.ActivityMapsBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.BumpManager
 import com.example.inroad.managers.LocationManager
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
-import com.shashank.sony.fancytoastlib.FancyToast
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
 
@@ -57,6 +53,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var bumpManager: BumpManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+            .getBoolean("isFirstRun", true)
+
+        if (isFirstRun) {
+            startActivity(Intent(this@MainActivity, IntroSlidersActivity::class.java))
+        }
+
+
+        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+            .putBoolean("isFirstRun", false).commit()
+
         super.onCreate(savedInstanceState)
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -102,7 +109,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun accelerometerPermissionRequested(){
-        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = this.getPreferences(MODE_PRIVATE)
         val accelerometerPermissionRequested = sharedPref?.contains(accelerometerPermissionKey)
         if (accelerometerPermissionRequested == true) {
             val accelerometerPermitted = readBooleanFromStorage(accelerometerPermissionKey)
@@ -144,11 +151,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 speed ->
                 binding.speed.text = "Скорость: ${speed} km/h"
             }
-        bumpManager.bumps
+       /* bumpManager.bumps
             .subscribe{
                 bumpLocation ->
                 FancyToast.makeText(this,"Неровность обнаружена",FancyToast.LENGTH_LONG,FancyToast.INFO,false).show()
-            }
+            }*/
     }
 
     private fun startBumps() {
@@ -244,7 +251,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }*/
 
     private fun saveBooleanToStorage(key: String, value: Boolean) {
-        val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val sharedPref = this?.getPreferences(MODE_PRIVATE) ?: return
         with (sharedPref.edit()) {
             putBoolean(key, value)
             apply()
@@ -252,7 +259,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun readBooleanFromStorage(key: String): Boolean {
-        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = this.getPreferences(MODE_PRIVATE)
         if (sharedPref != null) {
             return sharedPref?.getBoolean(key, false)
         }
