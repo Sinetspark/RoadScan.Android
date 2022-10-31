@@ -9,6 +9,10 @@ android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
+    buildFeatures{
+        dataBinding = true
+        viewBinding = true
+    }
     defaultConfig {
         applicationId "com.example.inroad"
         minSdkVersion 26
@@ -30,7 +34,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = '1.8'
     }
     buildFeatures {
         viewBinding  true
@@ -61,6 +65,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
 
     implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.4.1"
+    implementation "androidx.navigation:navigation-ui-ktx:2.4.1"
 
     def work_version = "2.7.1"
 

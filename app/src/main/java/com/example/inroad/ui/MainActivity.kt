@@ -69,43 +69,43 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
         val component = (applicationContext as AppComponentProvider).component
         component.inject(this)
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        viewModel.pingData.observe(this) {
-            state ->
-            if (!state.success) {
-                alertWithOk("Ошибка", "Извините, сервис временно недоступен")
-            } else {
-                accelerometerPermissionRequested()
-                initPoints = true
-            }
-        }
-        viewModel.mapData.observe(this) { state ->
-            for (point in state.points) {
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(LatLng(point.latitude, point.longitude))
-                )
-            }
-        }
-        viewModel.ping()
-
-        val networkRequest = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
-        val connectivityManager = this.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
-        connectivityManager.requestNetwork(networkRequest, viewModel.networkCallback)
-
-        viewModel.connectionData.observe(this) { isConnected ->
-            if (!isConnected) {
-                alertWithOk("Связь", "У вас пропал интернет")
-            }
-        }
-
-        viewModel.defaultConnection(this)
+//        val mapFragment = supportFragmentManager
+//            .findFragmentById(R.id.map) as SupportMapFragment
+//        mapFragment.getMapAsync(this)
+//        viewModel.pingData.observe(this) {
+//            state ->
+//            if (!state.success) {
+//                alertWithOk("Ошибка", "Извините, сервис временно недоступен")
+//            } else {
+//                accelerometerPermissionRequested()
+//                initPoints = true
+//            }
+//        }
+//        viewModel.mapData.observe(this) { state ->
+//            for (point in state.points) {
+//                mMap.addMarker(
+//                    MarkerOptions()
+//                        .position(LatLng(point.latitude, point.longitude))
+//                )
+//            }
+//        }
+//        viewModel.ping()
+//
+//        val networkRequest = NetworkRequest.Builder()
+//            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+//            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+//            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+//            .build()
+//        val connectivityManager = this.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
+//        connectivityManager.requestNetwork(networkRequest, viewModel.networkCallback)
+//
+//        viewModel.connectionData.observe(this) { isConnected ->
+//            if (!isConnected) {
+//                alertWithOk("Связь", "У вас пропал интернет")
+//            }
+//        }
+//
+//        viewModel.defaultConnection(this)
     }
 
     private fun accelerometerPermissionRequested(){
@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                             }
                         }
                     }
-                    binding.locations.text = "Локация: ${location.latitude}, ${location.longitude}"
+//                    binding.locations.text = "Локация: ${location.latitude}, ${location.longitude}"
                     /* mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location!!.latitude,
                             location!!.longitude), defaultZoom.toFloat()))*/
@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         locationManager.speed
             .subscribe {
                 speed ->
-                binding.speed.text = "Скорость: ${speed} km/h"
+                //binding.speed.text = "Скорость: ${speed} km/h"
             }
        /* bumpManager.bumps
             .subscribe{
@@ -260,9 +260,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun readBooleanFromStorage(key: String): Boolean {
         val sharedPref = this.getPreferences(MODE_PRIVATE)
-        if (sharedPref != null) {
-            return sharedPref?.getBoolean(key, false)
-        }
+//        if (sharedPref != null) {
+//            return sharedPref?.getBoolean(key, false)
+//        }
         return false
     }
 
