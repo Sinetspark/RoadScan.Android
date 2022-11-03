@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.example.inroad.R
-import com.example.inroad.databinding.ActivityMapsBinding
+import com.example.inroad.databinding.ActivityMainBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.BumpManager
 import com.example.inroad.managers.LocationManager
@@ -36,7 +36,7 @@ import javax.inject.Inject
 
 @Suppress("DEPRECATED_IDENTITY_EQUALS")
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMapsBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var mMap: GoogleMap
     private var currentLocation: Location? = null
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
             .putBoolean("isFirstRun", false).commit()
         super.onCreate(savedInstanceState)
-        binding = ActivityMapsBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         navController= Navigation.findNavController(this, R.id.activity_main_nav_host_fragment)
@@ -174,8 +174,20 @@ class MainActivity : AppCompatActivity() {
         viewModel.onBumpWorkerStart(applicationContext)
     }
 
-    private fun enableCurrentLocation(){
-        if (ContextCompat.checkSelfPermission(this@MainActivity,
+    fun enableCurrentLocation() {
+        /*if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        mMap.isMyLocationEnabled = false*/
+
+        if (ActivityCompat.checkSelfPermission(this@MainActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION) !==
             PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this@MainActivity,
