@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
-        android:id="@+id/firstFragment"
-        android:icon="@drawable/androidicon"
-        android:title="First" />
+        android:id="@+id/mapsFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/main"/>
     <item
         android:id="@+id/secondFragment"
-        android:icon="@drawable/androidicon"
-        android:title="Second" />
+        android:icon="@drawable/ic_settings"
+        android:title="@string/stettings" />
+
+        />
 </menu>

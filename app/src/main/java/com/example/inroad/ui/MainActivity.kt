@@ -16,6 +16,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.example.inroad.R
 import com.example.inroad.databinding.ActivityMapsBinding
 import com.example.inroad.di.AppComponentProvider
@@ -30,8 +34,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+@Suppress("DEPRECATED_IDENTITY_EQUALS")
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapsBinding
+    private lateinit var navController: NavController
     private lateinit var mMap: GoogleMap
     private var currentLocation: Location? = null
     private val defaultZoom = 15
@@ -60,52 +66,57 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivity(Intent(this@MainActivity, IntroSlidersActivity::class.java))
         }
 
-
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
             .putBoolean("isFirstRun", false).commit()
-
         super.onCreate(savedInstanceState)
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        navController= Navigation.findNavController(this, R.id.activity_main_nav_host_fragment)
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
+
+        enableCurrentLocation()
+
         val component = (applicationContext as AppComponentProvider).component
         component.inject(this)
-//        val mapFragment = supportFragmentManager
-//            .findFragmentById(R.id.map) as SupportMapFragment
-//        mapFragment.getMapAsync(this)
-//        viewModel.pingData.observe(this) {
-//            state ->
-//            if (!state.success) {
-//                alertWithOk("Ошибка", "Извините, сервис временно недоступен")
-//            } else {
-//                accelerometerPermissionRequested()
-//                initPoints = true
-//            }
-//        }
-//        viewModel.mapData.observe(this) { state ->
-//            for (point in state.points) {
-//                mMap.addMarker(
-//                    MarkerOptions()
-//                        .position(LatLng(point.latitude, point.longitude))
-//                )
-//            }
-//        }
-//        viewModel.ping()
-//
-//        val networkRequest = NetworkRequest.Builder()
-//            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-//            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-//            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-//            .build()
-//        val connectivityManager = this.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
-//        connectivityManager.requestNetwork(networkRequest, viewModel.networkCallback)
-//
-//        viewModel.connectionData.observe(this) { isConnected ->
-//            if (!isConnected) {
-//                alertWithOk("Связь", "У вас пропал интернет")
-//            }
-//        }
-//
-//        viewModel.defaultConnection(this)
+        /*val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)*/
+
+        viewModel.pingData.observe(this) {
+            state ->
+            if (!state.success) {
+                alertWithOk("Ошибка", "Извините, сервис временно недоступен")
+            } else {
+                accelerometerPermissionRequested()
+                initPoints = true
+            }
+        }
+        viewModel.mapData.observe(this) { state ->
+            for (point in state.points) {
+                mMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(point.latitude, point.longitude))
+                )
+            }
+        }
+        viewModel.ping()
+
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        val connectivityManager = this.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
+        connectivityManager.requestNetwork(networkRequest, viewModel.networkCallback)
+
+        viewModel.connectionData.observe(this) { isConnected ->
+            if (!isConnected) {
+                alertWithOk("Связь", "У вас пропал интернет")
+            }
+        }
+
+        viewModel.defaultConnection(this)
     }
 
     private fun accelerometerPermissionRequested(){
@@ -163,7 +174,32 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel.onBumpWorkerStart(applicationContext)
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
+    private fun enableCurrentLocation(){
+        if (ContextCompat.checkSelfPermission(this@MainActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION) !==
+            PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this@MainActivity,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this@MainActivity,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            } else {
+                ActivityCompat.requestPermissions(this@MainActivity,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            }
+            mMap.isMyLocationEnabled = true
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // permission was granted, yay! Do the
+            // location-related task you need to do.
+            enableCurrentLocation()
+        }
+    }
+
+/*    override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isCompassEnabled = true
@@ -215,7 +251,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             return
         }
         mMap.isMyLocationEnabled = true
-    }
+    }*/
 
     private fun alertWithOk(title: String, message: String) {
         val builder = AlertDialog.Builder(this)

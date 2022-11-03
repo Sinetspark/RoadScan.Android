@@ -3,16 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/firstFragment">
+    app:startDestination="@id/mapsFragment">
 
     <fragment
-        android:id="@+id/firstFragment"
-        android:name="com.example.inroad.BlankFragment"
-        android:label="fragment_first"
-        tools:layout="@layout/fragment_blank" />
+        android:id="@+id/mapsFragment"
+        android:name="com.example.inroad.fragments.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" />
+
     <fragment
         android:id="@+id/secondFragment"
         android:name="com.example.inroad.BlankFragment2"
         android:label="fragment_second"
         tools:layout="@layout/fragment_blank2" />
+
 </navigation>
