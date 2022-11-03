@@ -3,25 +3,18 @@ package com.example.inroad.fragments
 import android.Manifest
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.inroad.R
 import com.example.inroad.ui.MainActivity
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
 
 
 class MapsFragment : Fragment(), OnMapReadyCallback {
@@ -44,6 +37,27 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
+    }
+
+    fun setUpMap() {
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID)
+        if (ActivityCompat.checkSelfPermission(
+                context!!,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context!!, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        mMap.setMyLocationEnabled(true)
     }
 
 
@@ -72,9 +86,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
               // Log.e(TAG, "Can't find style. Error: ", e)
             }
 
-        activity?.let {
+        setUpMap()
+
+       /* activity?.let {
             (it as MainActivity).enableCurrentLocation()
-        }
+        }*/
 
         /*// Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
