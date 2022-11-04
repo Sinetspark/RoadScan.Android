@@ -25,9 +25,6 @@ import com.example.inroad.databinding.ActivityMainBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.BumpManager
 import com.example.inroad.managers.LocationManager
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -38,7 +35,6 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private lateinit var mMap: GoogleMap
     private var currentLocation: Location? = null
     private val defaultZoom = 15
     private var initPoints = false
@@ -79,9 +75,6 @@ class MainActivity : AppCompatActivity() {
 
         val component = (applicationContext as AppComponentProvider).component
         component.inject(this)
-        /*val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)*/
 
         viewModel.pingData.observe(this) {
             state ->
@@ -92,14 +85,14 @@ class MainActivity : AppCompatActivity() {
                 initPoints = true
             }
         }
-        viewModel.mapData.observe(this) { state ->
+        /*viewModel.mapData.observe(this) { state ->
             for (point in state.points) {
                 mMap.addMarker(
                     MarkerOptions()
                         .position(LatLng(point.latitude, point.longitude))
                 )
             }
-        }
+        }*/
         viewModel.ping()
 
         val networkRequest = NetworkRequest.Builder()
@@ -137,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         locationManager.onStart(this)
         locationManager.locations
             .subscribe { location ->
-                if (mMap != null) {
+                /*if (mMap != null) {
                     if (initPoints) {
                         if (currentLocation == null) {
                             currentLocation = location
@@ -152,10 +145,10 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 //                    binding.locations.text = "Локация: ${location.latitude}, ${location.longitude}"
-                    /* mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    *//* mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location!!.latitude,
-                            location!!.longitude), defaultZoom.toFloat()))*/
-                }
+                            location!!.longitude), defaultZoom.toFloat()))*//*
+                }*/
             }
         locationManager.speed
             .subscribe {
@@ -174,75 +167,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.onBumpWorkerStart(applicationContext)
     }
 
-    fun enableCurrentLocation() {
-        /*if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        mMap.isMyLocationEnabled = false*/
-
-        if (ActivityCompat.checkSelfPermission(this@MainActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION) !==
-            PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this@MainActivity,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(this@MainActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-            } else {
-                ActivityCompat.requestPermissions(this@MainActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-            }
-            mMap.isMyLocationEnabled = true
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // permission was granted, yay! Do the
-            // location-related task you need to do.
-            enableCurrentLocation()
-        }
-    }
-
-/*    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        mMap.uiSettings.isZoomControlsEnabled = true
-        mMap.uiSettings.isCompassEnabled = true
-        mMap.setMinZoomPreference(6f)
-        mMap.setMinZoomPreference(14f)
-
-        try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
-            val success = googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    this, R.raw.style_json
-                )
-            )
-            if (!success) {
-                // Log.e(TAG, "Style parsing failed.")
-            }
-        } catch (e: Resources.NotFoundException) {
-            // Log.e(TAG, "Can't find style. Error: ", e)
-        }
-        enableCurrentLocation()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // permission was granted, yay! Do the
-            // location-related task you need to do.
-            enableCurrentLocation()
-        }
-    }
 
     private fun enableCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(
@@ -253,17 +177,9 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
-        mMap.isMyLocationEnabled = true
-    }*/
+    }
 
     private fun alertWithOk(title: String, message: String) {
         val builder = AlertDialog.Builder(this)
