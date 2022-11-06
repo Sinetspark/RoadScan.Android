@@ -16,23 +16,25 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.example.inroad.R
-import com.example.inroad.databinding.ActivityMapsBinding
+import com.example.inroad.databinding.ActivityMainBinding
 import com.example.inroad.di.AppComponentProvider
 import com.example.inroad.managers.BumpManager
 import com.example.inroad.managers.LocationManager
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private lateinit var binding: ActivityMapsBinding
-    private lateinit var mMap: GoogleMap
+@Suppress("DEPRECATED_IDENTITY_EQUALS")
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
     private var currentLocation: Location? = null
     private val defaultZoom = 15
     private var initPoints = false
@@ -60,18 +62,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivity(Intent(this@MainActivity, IntroSlidersActivity::class.java))
         }
 
-
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
             .putBoolean("isFirstRun", false).commit()
-
         super.onCreate(savedInstanceState)
-        binding = ActivityMapsBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        navController= Navigation.findNavController(this, R.id.activity_main_nav_host_fragment)
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
+
+        enableCurrentLocation()
+
         val component = (applicationContext as AppComponentProvider).component
         component.inject(this)
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+
         viewModel.pingData.observe(this) {
             state ->
             if (!state.success) {
@@ -81,14 +85,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 initPoints = true
             }
         }
-        viewModel.mapData.observe(this) { state ->
+        /*viewModel.mapData.observe(this) { state ->
             for (point in state.points) {
                 mMap.addMarker(
                     MarkerOptions()
                         .position(LatLng(point.latitude, point.longitude))
                 )
             }
-        }
+        }*/
         viewModel.ping()
 
         val networkRequest = NetworkRequest.Builder()
@@ -126,7 +130,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         locationManager.onStart(this)
         locationManager.locations
             .subscribe { location ->
-                if (mMap != null) {
+                /*if (mMap != null) {
                     if (initPoints) {
                         if (currentLocation == null) {
                             currentLocation = location
@@ -140,16 +144,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                             }
                         }
                     }
-                    binding.locations.text = "Локация: ${location.latitude}, ${location.longitude}"
-                    /* mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//                    binding.locations.text = "Локация: ${location.latitude}, ${location.longitude}"
+                    *//* mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location!!.latitude,
-                            location!!.longitude), defaultZoom.toFloat()))*/
-                }
+                            location!!.longitude), defaultZoom.toFloat()))*//*
+                }*/
             }
         locationManager.speed
             .subscribe {
                 speed ->
-                binding.speed.text = "Скорость: ${speed} km/h"
+                //binding.speed.text = "Скорость: ${speed} km/h"
             }
        /* bumpManager.bumps
             .subscribe{
@@ -163,38 +167,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel.onBumpWorkerStart(applicationContext)
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        mMap.uiSettings.isZoomControlsEnabled = true
-        mMap.uiSettings.isCompassEnabled = true
-        mMap.setMinZoomPreference(6f)
-        mMap.setMinZoomPreference(14f)
-
-        try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
-            val success = googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    this, R.raw.style_json
-                )
-            )
-            if (!success) {
-                // Log.e(TAG, "Style parsing failed.")
-            }
-        } catch (e: Resources.NotFoundException) {
-            // Log.e(TAG, "Can't find style. Error: ", e)
-        }
-        enableCurrentLocation()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // permission was granted, yay! Do the
-            // location-related task you need to do.
-            enableCurrentLocation()
-        }
-    }
 
     private fun enableCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(
@@ -205,16 +177,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
-        mMap.isMyLocationEnabled = true
     }
 
     private fun alertWithOk(title: String, message: String) {
@@ -260,9 +224,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun readBooleanFromStorage(key: String): Boolean {
         val sharedPref = this.getPreferences(MODE_PRIVATE)
-        if (sharedPref != null) {
-            return sharedPref?.getBoolean(key, false)
-        }
+//        if (sharedPref != null) {
+//            return sharedPref?.getBoolean(key, false)
+//        }
         return false
     }
 
