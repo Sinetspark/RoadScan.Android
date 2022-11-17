@@ -17,6 +17,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
@@ -43,12 +45,7 @@ class MainActivity : AppCompatActivity() {
     private val accelerometerPermissionKey = "accelerometerPermissionKey"
 
     @Inject
-    lateinit var viewModelFactory: MainViewModel.Factory
-    private val viewModel: MainViewModel by viewModels {
-        viewModelFactory
-    }
 
-    @Inject
     lateinit var locationManager: LocationManager
 
     @Inject
@@ -76,40 +73,7 @@ class MainActivity : AppCompatActivity() {
         val component = (applicationContext as AppComponentProvider).component
         component.inject(this)
 
-        viewModel.pingData.observe(this) {
-            state ->
-            if (!state.success) {
-                alertWithOk("Ошибка", "Извините, сервис временно недоступен")
-            } else {
-                accelerometerPermissionRequested()
-                initPoints = true
-            }
-        }
-        /*viewModel.mapData.observe(this) { state ->
-            for (point in state.points) {
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(LatLng(point.latitude, point.longitude))
-                )
-            }
-        }*/
-        viewModel.ping()
 
-        val networkRequest = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
-        val connectivityManager = this.getSystemService(ConnectivityManager::class.java) as ConnectivityManager
-        connectivityManager.requestNetwork(networkRequest, viewModel.networkCallback)
-
-        viewModel.connectionData.observe(this) { isConnected ->
-            if (!isConnected) {
-                alertWithOk("Связь", "У вас пропал интернет")
-            }
-        }
-
-        viewModel.defaultConnection(this)
     }
 
     private fun accelerometerPermissionRequested(){
@@ -164,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startBumps() {
         bumpManager.onStart(this, locationManager)
-        viewModel.onBumpWorkerStart(applicationContext)
+        //viewModel.onBumpWorkerStart(applicationContext)
     }
 
 
@@ -181,14 +145,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun alertWithOk(title: String, message: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(title)
-        builder.setMessage(message)
-        builder.setPositiveButton("Oк",
-            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
-        builder.show()
-    }
 
 /*    fun accelerometrAccess(private val context: Context) {
         private val settings: SharedPreferences
