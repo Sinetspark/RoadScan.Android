@@ -1,12 +1,9 @@
 package com.example.inroad.ui
 
 import android.content.Context
-import android.content.DialogInterface
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.util.Log
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,7 +42,7 @@ class MainViewModel @Inject constructor(
      * которые потом преобразуются в данные ui слоя, которые удобно устанавливать для экрана
      */
     fun onInitiallyCreated(component: AppComponent, context: Context) {
-        //component.inject(this)
+        component.inject(this)
     }
 
     fun onBumpWorkerStart(context: Context) {
