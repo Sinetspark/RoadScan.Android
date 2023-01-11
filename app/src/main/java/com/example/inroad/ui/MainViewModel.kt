@@ -36,7 +36,7 @@ class MainViewModel @Inject constructor(
      * которые потом преобразуются в данные ui слоя, которые удобно устанавливать для экрана
      */
     fun onInitiallyCreated(component: AppComponent, context: Context) {
-        //component.inject(this)
+        component.inject(this)
     }
 
     fun onBumpWorkerStart(context: Context) {

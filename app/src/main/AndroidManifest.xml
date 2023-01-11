@@ -29,7 +29,7 @@
             android:value="AIzaSyDEOc99VpmVQ6CtSvoyv-0w0vsVKy6WQsc" />
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,6 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.MainActivity" />
 
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"

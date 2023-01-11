@@ -80,5 +80,10 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.40.5'
     kapt 'com.google.dagger:dagger-compiler:2.40.5'
 
+
+
     implementation 'io.github.shashank02051997:FancyToast:2.0.1'
+
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
 }
