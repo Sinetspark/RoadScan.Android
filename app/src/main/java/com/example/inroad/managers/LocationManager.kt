@@ -19,7 +19,6 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 class LocationManager (
     context: Context
 ) {
-
     private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     private val locationSubject by lazy { BehaviorSubject.create<Location>() }
@@ -70,6 +69,7 @@ class LocationManager (
     private fun setLocationListener() {
         val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
+                Log.v("TAG", "IN ON LOCATION CHANGE, lat=" + location.latitude + ", lon=" + location.longitude);
                 locationSubject.onNext(location)
                 speedSubject.onNext((location.speed * 3600) / 1000)
             }

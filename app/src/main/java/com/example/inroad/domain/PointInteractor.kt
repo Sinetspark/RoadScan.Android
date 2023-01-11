@@ -14,8 +14,7 @@ class PointInteractor @Inject constructor() {
         repository.getPoints(latitude, longitude, minDistance, maxDistance).map {
         val result = mutableListOf<Point>();
         for (pointData in it) {
-            val test = mapper.dataToDomain(pointData)
-            result.add(test);
+            result.add(mapper.dataToDomain(pointData));
         }
         result
     }
