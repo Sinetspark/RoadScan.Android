@@ -1,33 +1,41 @@
 package com.example.inroad.fragments
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.NonNull
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.inroad.R
 import com.example.inroad.di.AppComponentProvider
-import com.example.inroad.managers.LocationManager
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import javax.inject.Inject
 
-class MapsFragment : Fragment(), OnMapReadyCallback {
+
+class MapsFragment : Fragment(), OnMapReadyCallback,
+    GoogleMap.OnCameraMoveStartedListener,
+    GoogleMap.OnCameraMoveListener,
+    GoogleMap.OnCameraMoveCanceledListener,
+    GoogleMap.OnCameraIdleListener {
     private var currentLocation: Location? = null
     private val defaultZoom = 15
     private val maxDistance = 100000
     private val minDistance = 0
 
     private lateinit var mMap: GoogleMap
-
-    @Inject
-    lateinit var locationManager: LocationManager
 
     @Inject
     lateinit var viewModelFactory: MapViewModel.Factory
@@ -49,10 +57,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
-        locationManager.locations
-            .subscribe { location ->
-                this.onLocationChange(location)
-            }
         viewModel.mapData.observe(viewLifecycleOwner) { state ->
             for (point in state.points) {
                 mMap.addMarker(
@@ -61,6 +65,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 )
             }
         }
+        enableCurrentLocation()
     }
 
     private fun onLocationChange(location: Location) {
@@ -117,6 +122,44 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         } catch (e: Resources.NotFoundException) {
             // Log.e(TAG, "Can't find style. Error: ", e)
         }
-        mMap.isMyLocationEnabled = true
+        mMap.setOnCameraMoveStartedListener(this);
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun enableCurrentLocation() {
+        val locationPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    mMap.isMyLocationEnabled = true
+                }
+                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                    mMap.isMyLocationEnabled = true
+                } else -> {
+                    mMap.isMyLocationEnabled = false
+                // No location access granted.
+            }
+            }
+        }
+        locationPermissionRequest.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION));
+    }
+
+    override fun onCameraMoveStarted(p0: Int) {
+        Log.d("onCameraMoveStarted", "onCameraMoveStarted")
+    }
+
+    override fun onCameraMove() {
+        Log.d("onCameraMove", "onCameraMove")
+    }
+
+    override fun onCameraMoveCanceled() {
+        Log.d("onCameraMoveCanceled", "onCameraMoveCanceled")
+    }
+
+    override fun onCameraIdle() {
+        Log.d("onCameraIdle", "onCameraIdle")
     }
 }

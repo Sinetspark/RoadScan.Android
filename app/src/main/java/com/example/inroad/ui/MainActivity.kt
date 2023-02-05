@@ -57,8 +57,6 @@ class MainActivity : AppCompatActivity() {
         navController = Navigation.findNavController(this, R.id.activity_main_nav_host_fragment)
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
 
-        enableCurrentLocation()
-
         val component = (applicationContext as AppComponentProvider).component
         component.inject(this)
 
@@ -99,19 +97,6 @@ class MainActivity : AppCompatActivity() {
     private fun startBumps() {
         bumpManager.onStart(this, locationManager)
         viewModel.onBumpWorkerStart(applicationContext)
-    }
-
-    private fun enableCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
     }
 
     private fun alertWithOk(title: String, message: String) {
