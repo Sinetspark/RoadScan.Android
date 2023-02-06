@@ -49,25 +49,22 @@ class IntroSlidersActivity : AppCompatActivity() {
 
         sliderList.add(
             SliderData(
-                "inRoad",
-                "Let's make our roads better",
-                R.drawable.ic_launcher_new_foreground
+                "InRoad — это приложение, фиксирующее неровности на дорогах",
+                R.drawable.road_intro_1
             )
         )
 
         sliderList.add(
             SliderData(
-                "Slide 2",
-                "slide 2",
-                R.drawable.ic_launcher_new_foreground
+                "Приложение фиксирует неровности на дорогах с использованием данных акселерометра смартфона и привязкой к геолокации",
+                R.drawable.road_intro_2
             )
         )
 
         sliderList.add(
             SliderData(
-                "Slide 3",
-                "slide 2",
-                R.drawable.ic_launcher_new_foreground
+                "Для корректной работы приложения разрешите доступ к использованию данных о геолокации и акселерометра",
+                R.drawable.road_intro_3
             )
         )
 

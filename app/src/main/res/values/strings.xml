@@ -5,6 +5,7 @@
     <string name="default_info_snippet">Location</string>
     <string name="pick_place">pick place</string>
     <string name="main">Карта</string>
+    <string name="next">Дальше</string>
     <string name="stettings">Настройки</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
