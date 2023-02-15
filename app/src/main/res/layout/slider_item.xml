@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/idRLSlider"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,10 +25,12 @@
         android:layout_width="match_parent"
         android:layout_height="215dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="342dp"
+        android:layout_marginTop="292dp"
         android:fontFamily="@font/stolzl_medium"
-        android:textSize="36sp"
-        android:lineSpacingExtra="0sp"
+        android:text="InRoad — это приложение, фиксирующее неровности на дорогах"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="24sp"
+        app:autoSizeMaxTextSize="36sp"
         android:gravity="center_horizontal|top"
         android:textColor="@color/white"/>
 
