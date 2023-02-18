@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         if (isFirstRun) {
             startActivity(Intent(this@MainActivity, IntroSlidersActivity::class.java))
+            finish()
         }
 
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()

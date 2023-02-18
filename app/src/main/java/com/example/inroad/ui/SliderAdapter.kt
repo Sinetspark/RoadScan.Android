@@ -32,12 +32,10 @@ class SliderAdapter(
 
         val view: View = layoutInflater.inflate(R.layout.slider_item, container, false)
 
-        val imageView: ImageView = view.findViewById(R.id.idIVSlider)
-        val sliderHeadingTV: TextView = view.findViewById(R.id.idTVSliderTitle)
-        val sliderDescTV: TextView = view.findViewById(R.id.idTVSliderDescription)
+        val imageView: ImageView = view.findViewById(R.id.roadIllustration)
+        val sliderDescTV: TextView = view.findViewById(R.id.idSliderDescription)
 
         val sliderData: SliderData = sliderList.get(position)
-        sliderHeadingTV.text = sliderData.slideTitle
         sliderDescTV.text = sliderData.slideDescription
         imageView.setImageResource(sliderData.slideImage)
 
