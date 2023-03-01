@@ -29,8 +29,7 @@ class CarChoiceActivity : AppCompatActivity() {
 
 
         choiceBtn.setOnClickListener() {
-            val i = Intent(this@CarChoiceActivity, MainActivity::class.java)
-                startActivity(i)
+            startActivity(Intent(this@CarChoiceActivity, MainActivity::class.java))
         }
 
         carChoiceList = ArrayList()
@@ -42,12 +41,17 @@ class CarChoiceActivity : AppCompatActivity() {
         )
         carChoiceList.add(
             CarChoiceData(
-                R.drawable.road_intro_2
+                R.drawable.hatchback_car
             )
         )
         carChoiceList.add(
             CarChoiceData(
-                R.drawable.road_intro_3
+                R.drawable.jeep_car
+            )
+        )
+        carChoiceList.add(
+            CarChoiceData(
+                R.drawable.watcher_car
             )
         )
 
