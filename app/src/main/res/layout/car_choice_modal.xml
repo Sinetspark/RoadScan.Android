@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.CarChoiceActivity">
+
+    <TextView
+        android:id="@+id/choiceCars"
+        android:layout_width="352dp"
+        android:layout_height="126dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="92dp"
+        android:fontFamily="@font/stolzl_medium"
+        android:gravity="center_horizontal|top"
+        android:text="Выберите тип вашего автомобиля"
+        android:textColor="@color/black"
+        app:autoSizeMaxTextSize="36sp"
+        app:autoSizeMinTextSize="24sp"
+        app:autoSizeTextType="uniform" />
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/idCarViewPager"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="296dp"
+        android:layout_width="match_parent"
+        android:layout_height="177dp"/>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp">
+
+        <Button
+            android:id="@+id/idBtnChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_intro"
+            android:fontFamily="@font/stolzl_medium"
+            android:scaleType="centerCrop"
+            android:text="@string/choice"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
