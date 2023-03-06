@@ -3,6 +3,7 @@
     android:height="189dp"
     android:viewportWidth="292"
     android:viewportHeight="189">
+
   <path
       android:pathData="M22,4L270,4A16,16 0,0 1,286 20L286,165A16,16 0,0 1,270 181L22,181A16,16 0,0 1,6 165L6,20A16,16 0,0 1,22 4z"
       android:fillColor="#FDFDFE"/>
@@ -13,6 +14,7 @@
         android:pathData="M51,36h190v88h-190z"
         android:fillColor="@color/black"
         />
+
 <!--
     android:fillColor="url(#pattern0)"
 -->

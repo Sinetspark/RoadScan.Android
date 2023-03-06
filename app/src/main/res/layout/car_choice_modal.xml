@@ -22,32 +22,64 @@
         app:autoSizeMinTextSize="24sp"
         app:autoSizeTextType="uniform" />
 
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/idCarViewPager"
-        android:scaleType="centerCrop"
-        android:layout_marginTop="296dp"
-        android:layout_width="match_parent"
-        android:layout_height="177dp"/>
-
-
-    <RelativeLayout
+    <Button
+        android:id="@+id/idBtnChoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp">
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/button_intro"
+        android:fontFamily="@font/stolzl_medium"
+        android:scaleType="centerCrop"
+        android:text="@string/choice"
+        android:textColor="@color/white" />
 
-        <Button
-            android:id="@+id/idBtnChoice"
-            android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="177dp"
+        android:layout_marginTop="285dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_intro"
-            android:fontFamily="@font/stolzl_medium"
-            android:scaleType="centerCrop"
-            android:text="@string/choice"
-            android:textColor="@color/white" />
+            android:orientation="horizontal">
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/vechical_car_img"
+                android:layout_width="280dp"
+                android:layout_height="177dp"
+                android:layout_marginRight="26dp"
+                android:src="@drawable/vechical_car_src"
+
+                />
+
+            <ImageView
+                android:id="@+id/hatchback_car_img"
+                android:layout_width="280dp"
+                android:layout_height="177dp"
+                android:layout_marginRight="26dp"
+                android:src="@drawable/hatchback_car"
+                />
+
+            <ImageView
+                android:id="@+id/jeep_car_img"
+                android:layout_width="280dp"
+                android:layout_height="177dp"
+                android:layout_marginRight="26dp"
+                android:src="@drawable/jeep_car"
+                />
+
+            <ImageView
+                android:id="@+id/watcher_car_img"
+                android:layout_width="280dp"
+                android:layout_height="177dp"
+                android:layout_marginRight="26dp"
+                android:src="@drawable/watcher_car"
+                />
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </RelativeLayout>
