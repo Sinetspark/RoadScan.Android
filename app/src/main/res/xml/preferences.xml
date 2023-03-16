@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <ListPreference
+        android:dialogTitle="Режим пользования"
+        android:key="mod_of_use"
+        android:entries="@array/mode_of_use_titles"
+        android:entryValues="@array/mode_of_use_titles"
+        android:title="Режим пользования"
+        android:layout="@layout/settings_style"
+        />
+    <ListPreference
+        android:dialogTitle="Тип автомобиля"
+        android:key="car_type"
+        android:entries="@array/car_types_title"
+        android:entryValues="@array/car_types_values"
+        android:title="Тип автомобиля"
+        android:layout="@layout/settings_style"
+        />
+    <ListPreference
+        android:dialogTitle="Изменить город"
+        android:key="cities"
+        android:entries="@array/cities_title"
+        android:entryValues="@array/cities_values"
+        android:title="Изменить город"
+        android:layout="@layout/settings_style"
+        />
+    <ListPreference
+        android:dialogTitle="Выбрать язык приложения"
+        android:key="languages"
+        android:entries="@array/languages_title"
+        android:entryValues="@array/languages_values"
+        android:title="Выбрать язык приложения"
+        android:layout="@layout/settings_style"
+        />
+    <Preference
+        android:key="@string/pref_key_review"
+        android:layout="@layout/fragment_settings"/>
+</PreferenceScreen>
