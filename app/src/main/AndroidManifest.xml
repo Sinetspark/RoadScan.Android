@@ -22,20 +22,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InRoad"
         android:versionCode="2">
-        <!--<activity
-            android:name=".CarChoiceAdapter"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".CarChoiceData"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>-->
         <activity
             android:name=".ui.CarChoiceActivity"
             android:exported="false">
