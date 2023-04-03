@@ -15,6 +15,6 @@
         android:id="@+id/secondFragment"
         android:name="com.example.inroad.fragments.SettingsFragment"
         android:label="fragment_second"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings"/>
 
 </navigation>

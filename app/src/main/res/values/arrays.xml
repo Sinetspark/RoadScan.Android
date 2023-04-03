@@ -1,0 +1,48 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="mode_of_use_titles">
+        <item>Наблюдатель</item>
+        <item>Водитель</item>
+    </string-array>
+    <string-array name="mode_of_use_values">
+        <item>Watcher</item>
+        <item>Driver</item>
+    </string-array>
+
+    <string-array name="car_types_title">
+        <item>Легковой</item>
+        <item>Кроссовер/хэтчбэк</item>
+        <item>Джип</item>
+        <item>У меня нет авто</item>
+    </string-array>
+    <string-array name="car_types_values">
+        <item>vechical</item>
+        <item>hatchback</item>
+        <item>jeep</item>
+        <item>Watcher</item>
+    </string-array>
+
+    <string-array name="cities_title">
+        <item>Якутск</item>
+    </string-array>
+    <string-array name="cities_values">
+        <item>Yakutsk</item>
+    </string-array>
+
+    <string-array name="languages_title">
+        <item>Русский</item>
+    </string-array>
+    <string-array name="languages_values">
+        <item>Russian</item>
+    </string-array>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+</resources>
