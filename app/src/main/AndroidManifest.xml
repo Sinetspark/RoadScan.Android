@@ -23,6 +23,14 @@
         android:theme="@style/Theme.InRoad"
         android:versionCode="2">
         <activity
+             <activity
+            android:name=".ui.CarChoiceActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>       
+        <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings">

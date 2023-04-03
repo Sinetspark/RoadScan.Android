@@ -5,6 +5,8 @@
     <string name="default_info_snippet">Location</string>
     <string name="pick_place">pick place</string>
     <string name="main">Карта</string>
+    <string name="choice">Выбрать</string>
+
     <string name="stettings">Настройки</string>
 
     <!--Buttons texts-->
