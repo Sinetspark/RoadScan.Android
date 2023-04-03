@@ -47,38 +47,77 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/vechical_car_img"
+            <androidx.cardview.widget.CardView
+                android:layout_width="280dp"
+                android:layout_height="177dp"
+                android:layout_marginEnd="26dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <ImageView
+                    android:id="@+id/vechical_car_img"
+                    android:layout_width="280dp"
+                    android:layout_height="177dp"
+                    android:layout_marginEnd="26dp"
+                    android:background="@drawable/vechical_car"
+                    android:src="@mipmap/vechical_car"
+                    />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="280dp"
+                android:layout_height="177dp"
+                android:layout_marginEnd="26dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <ImageView
+                    android:id="@+id/hatchback_car_img"
+                    android:layout_width="280dp"
+                    android:layout_height="177dp"
+                    android:layout_marginEnd="26dp"
+                    android:background="@drawable/hatchback_car"
+                    android:src="@mipmap/hatchback_car"
+                    />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="280dp"
+                android:layout_height="177dp"
+                android:layout_marginEnd="26dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <ImageView
+                    android:id="@+id/jeep_car_img"
+                    android:layout_width="280dp"
+                    android:layout_height="177dp"
+                    android:layout_marginEnd="26dp"
+                    android:background="@drawable/jeep_car"
+                    android:src="@mipmap/jeep_car"
+                    />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="280dp"
                 android:layout_height="177dp"
                 android:layout_marginRight="26dp"
-                android:src="@drawable/vechical_car_src"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
 
-                />
+                <ImageView
+                    android:id="@+id/watcher_car_img"
+                    android:layout_width="280dp"
+                    android:layout_height="177dp"
+                    android:layout_marginRight="26dp"
+                    android:src="@drawable/watcher_car"
+                    />
+            </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/hatchback_car_img"
-                android:layout_width="280dp"
-                android:layout_height="177dp"
-                android:layout_marginRight="26dp"
-                android:src="@drawable/hatchback_car"
-                />
-
-            <ImageView
-                android:id="@+id/jeep_car_img"
-                android:layout_width="280dp"
-                android:layout_height="177dp"
-                android:layout_marginRight="26dp"
-                android:src="@drawable/jeep_car"
-                />
-
-            <ImageView
-                android:id="@+id/watcher_car_img"
-                android:layout_width="280dp"
-                android:layout_height="177dp"
-                android:layout_marginRight="26dp"
-                android:src="@drawable/watcher_car"
-                />
         </LinearLayout>
     </HorizontalScrollView>
 
