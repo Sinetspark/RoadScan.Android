@@ -5,10 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.inroad.data.dto.PointStatus
 import com.example.inroad.di.AppComponent
 import com.example.inroad.domain.PointInteractor
 import com.example.inroad.domain.entities.Point
 import com.example.inroad.ui.MainViewModel
+import com.example.inroad.ui.PingState
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -28,8 +30,8 @@ class MapViewModel @Inject constructor(
         //component.inject(this)
     }
 
-    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int) {
-        pointInteractor.getPoints(latitude, longitude, minDistance, maxDistance)
+    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int, status: PointStatus) {
+        pointInteractor.getPoints(latitude, longitude, minDistance, maxDistance, 1)
             .map { points ->
                 val result = mutableListOf<Point>()
                 for (point in points) {
