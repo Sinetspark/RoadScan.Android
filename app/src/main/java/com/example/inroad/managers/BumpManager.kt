@@ -1,5 +1,6 @@
 package com.example.inroad.managers
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.activity.ComponentActivity
 import io.reactivex.rxjava3.core.Observable
@@ -47,6 +48,7 @@ class BumpManager(
                     Log.i("result", "${result}")
                     if (abs(result) > 20) {
                         bumpSubject.onNext(bump.locations)
+                        Log.i("resultBump", "${result}")
                     }
                 }
                 previousSquare = currentSquare

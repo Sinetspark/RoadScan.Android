@@ -106,7 +106,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isCompassEnabled = true
         mMap.setMinZoomPreference(6f)
-        mMap.setMinZoomPreference(20f)
+        mMap.setMinZoomPreference(14f)
 
         try {
             // Customise the styling of the base map using a JSON object defined
