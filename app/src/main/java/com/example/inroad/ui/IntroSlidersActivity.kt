@@ -30,7 +30,7 @@ class IntroSlidersActivity : AppCompatActivity() {
         skipBtn = findViewById(R.id.idBtnSkip)
 
         skipBtn.setOnClickListener() {
-            val i = Intent(this@IntroSlidersActivity, CarChoiceActivity::class.java)
+            val i = Intent(this@IntroSlidersActivity, ViewModeChoice::class.java)
 
             if (mCurrentPage == 2) {
                 startActivity(i)

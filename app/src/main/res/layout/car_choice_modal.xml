@@ -29,7 +29,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"
-        android:background="@drawable/button_intro"
+        android:background="@drawable/reviewbutton"
         android:fontFamily="@font/stolzl_medium"
         android:scaleType="centerCrop"
         android:text="@string/choice"

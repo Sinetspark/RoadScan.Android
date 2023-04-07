@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.ViewModeChoice">
+
+    <TextView
+        android:id="@+id/choiceMode"
+        android:layout_width="352dp"
+        android:layout_height="126dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="92dp"
+        android:fontFamily="@font/stolzl_medium"
+        android:gravity="center_horizontal|top"
+        android:text="Выберите тип просмотра"
+        android:textColor="@color/black"
+        app:autoSizeMaxTextSize="36sp"
+        app:autoSizeMinTextSize="24sp"
+        app:autoSizeTextType="uniform" />
+
+    <Button
+        android:id="@+id/idBtnChoiceMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/reviewbutton"
+        android:fontFamily="@font/stolzl_medium"
+        android:scaleType="centerCrop"
+        android:text="@string/choice"
+        android:textColor="@color/white" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="177dp"
+        android:layout_marginTop="285dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/driver_mode"
+                android:layout_width="280dp"
+                android:layout_height="177dp"
+                android:layout_marginEnd="26dp"
+                android:backgroundTint="@color/white"
+                android:text="@string/driver"
+                android:textColor="@color/black"
+                android:fontFamily="@font/stolzl_medium"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/watcher_mode"
+                android:layout_width="280dp"
+                android:layout_height="177dp"
+                android:layout_marginEnd="26dp"
+                android:backgroundTint="@color/white"
+                android:text="@string/watcher_mode"
+                android:textColor="@color/black"
+                android:fontFamily="@font/stolzl_medium"
+                />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</RelativeLayout>
