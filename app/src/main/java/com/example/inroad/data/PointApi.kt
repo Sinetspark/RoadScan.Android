@@ -16,5 +16,5 @@ class PointApi {
 
     private val service = retrofit.create(PointService::class.java)
 
-    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int, status: Int) = service.getPoints(GetPoints(latitude, longitude, minDistance, maxDistance, status))
+    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int) = service.getPoints(GetPoints(latitude, longitude, minDistance, maxDistance))
 }

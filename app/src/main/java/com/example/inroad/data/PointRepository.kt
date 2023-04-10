@@ -10,6 +10,6 @@ import io.reactivex.rxjava3.core.Observable
 class PointRepository {
     private val api = PointApi()
 
-    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int, status: Int): Observable<Array<PointData>> =
-        api.getPoints(latitude, longitude, minDistance, maxDistance, status)
+    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int): Observable<Array<PointData>> =
+        api.getPoints(latitude, longitude, minDistance, maxDistance)
 }

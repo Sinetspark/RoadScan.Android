@@ -75,10 +75,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
     }
 
     private fun onLocationChange(location: Location) {
-        if (currentLocation == null || currentLocation!!.distanceTo(location) > 2000) {
-            getPoints(location.latitude, location.longitude)
-        }
-        currentLocation = location
         if (!cameraMove) {
             mMap?.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
@@ -96,8 +92,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
             latitude,
             longitude,
             minDistance,
-            maxDistance,
-            PointStatus.COMPLETED
+            maxDistance
         )
     }
 
@@ -106,7 +101,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isCompassEnabled = true
         mMap.setMinZoomPreference(6f)
-        mMap.setMinZoomPreference(20f)
+        //mMap.setMinZoomPreference(14f)
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -162,7 +157,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
             val targetLocation = Location("") //provider name is unnecessary
             targetLocation.latitude = coords.latitude//your coords of course
             targetLocation.longitude = coords.longitude
-            onLocationChange(targetLocation)
+            if (currentLocation == null || currentLocation!!.distanceTo(targetLocation) > maxDistance) {
+                getPoints(targetLocation.latitude, targetLocation.longitude)
+                currentLocation = targetLocation
+            }
             cameraMove = false
         }
     }
