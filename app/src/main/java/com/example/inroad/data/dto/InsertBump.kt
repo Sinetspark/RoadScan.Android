@@ -8,6 +8,8 @@ data class InsertBump(
     val latitude: Double,
     @SerializedName(DataConstants.KEY_LONGITUDE)
     val longitude: Double,
+    @SerializedName(DataConstants.KEY_DEPTH)
+    val depth: Double,
     @SerializedName(DataConstants.KEY_CITY)
     val city: String,
     @SerializedName(DataConstants.KEY_COUNTRY)

@@ -15,11 +15,13 @@ import androidx.fragment.app.viewModels
 import com.example.inroad.R
 import com.example.inroad.data.dto.PointStatus
 import com.example.inroad.di.AppComponentProvider
+import com.example.inroad.domain.entities.PointType
 import com.example.inroad.managers.LocationManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -62,9 +64,17 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
         mapFragment?.getMapAsync(this)
         viewModel.mapData.observe(viewLifecycleOwner) { state ->
             for (point in state.points) {
+                var resourceId = R.drawable.circle_green
+                if (point.type == PointType.MEDIUM) {
+                    resourceId = R.drawable.circle_yellow
+                }
+                else if (point.type == PointType.LARGE) {
+                    resourceId = R.drawable.circle_red
+                }
                 mMap.addMarker(
                     MarkerOptions()
                         .position(LatLng(point.latitude, point.longitude))
+                        .icon(BitmapDescriptorFactory.fromResource(resourceId))
                 )
             }
         }

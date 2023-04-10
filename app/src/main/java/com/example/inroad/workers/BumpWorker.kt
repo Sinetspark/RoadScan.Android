@@ -39,10 +39,10 @@ class BumpWorker(
     private fun insertBumps() {
         val bumpLocations = arrayListOf<InsertBump>()
         bumpManager.bumps
-            .blockingSubscribe { location ->
-                Log.i("bump", "${location.latitude}, ${location.longitude}")
-                bumpLocations.add(InsertBump(location.latitude,
-                    location.longitude, "", ""))
+            .blockingSubscribe { bump ->
+                Log.i("bump", "${bump.latitude}, ${bump.longitude}")
+                bumpLocations.add(InsertBump(bump.latitude,
+                    bump.longitude, bump.depth, bump.city, bump.country))
                 if (bumpLocations.count() >= 10) {
                     bumpInteractor.insertBumps(InsertBumps(bumpLocations))
                         .subscribe()

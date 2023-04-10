@@ -1,7 +1,8 @@
 package com.example.inroad.domain.entities
 
-class Bump (val id: String,
+data class BumpEntity (
             val latitude: Double,
             val longitude: Double,
+            val depth: Double,
             val city: String,
             val country: String)

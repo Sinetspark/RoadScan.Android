@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import android.location.Location
 import android.util.Log
+import com.example.inroad.domain.entities.BumpEntity
 import com.example.inroad.managers.models.Bump
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -19,8 +20,8 @@ class BumpManager(
     context: Context
 )  {
     lateinit var accelerometerManager: AccelerometerManager
-    private val bumpSubject by lazy { BehaviorSubject.create<Location>() }
-    val bumps: Observable<Location> = bumpSubject
+    private val bumpSubject by lazy { BehaviorSubject.create<BumpEntity>() }
+    val bumps: Observable<BumpEntity> = bumpSubject
 
     fun onStart(activity: ComponentActivity, locationManager: LocationManager) {
         var previousSquare: Double? = null
@@ -43,10 +44,16 @@ class BumpManager(
                     .pow(2.0) + spreads[2].toDouble().pow(2.0)
                 )
                 if (previousSquare != null) {
-                    var result = abs(previousSquare!!) - abs(currentSquare)
-                    Log.i("result", "${result}")
-                    if (abs(result) > 20) {
-                        bumpSubject.onNext(bump.locations)
+                    var depth = abs(previousSquare!!) - abs(currentSquare)
+                    Log.i("result", "${depth}")
+                    if (abs(depth) > 1.9) {
+                        bumpSubject.onNext(BumpEntity(
+                            bump.locations.latitude,
+                            bump.locations.longitude,
+                            abs(depth),
+                            "",
+                            ""
+                        ))
                     }
                 }
                 previousSquare = currentSquare
