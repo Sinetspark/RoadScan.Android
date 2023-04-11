@@ -30,8 +30,8 @@ class MapViewModel @Inject constructor(
         //component.inject(this)
     }
 
-    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int, status: PointStatus) {
-        pointInteractor.getPoints(latitude, longitude, minDistance, maxDistance, 1)
+    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int) {
+        pointInteractor.getPoints(latitude, longitude, minDistance, maxDistance)
             .map { points ->
                 val result = mutableListOf<Point>()
                 for (point in points) {

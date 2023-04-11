@@ -15,11 +15,13 @@ import androidx.fragment.app.viewModels
 import com.example.inroad.R
 import com.example.inroad.data.dto.PointStatus
 import com.example.inroad.di.AppComponentProvider
+import com.example.inroad.domain.entities.PointType
 import com.example.inroad.managers.LocationManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -62,9 +64,17 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
         mapFragment?.getMapAsync(this)
         viewModel.mapData.observe(viewLifecycleOwner) { state ->
             for (point in state.points) {
+                var resourceId = R.drawable.circle_green
+                if (point.type == PointType.MEDIUM) {
+                    resourceId = R.drawable.circle_yellow
+                }
+                else if (point.type == PointType.LARGE) {
+                    resourceId = R.drawable.circle_red
+                }
                 mMap.addMarker(
                     MarkerOptions()
                         .position(LatLng(point.latitude, point.longitude))
+                        .icon(BitmapDescriptorFactory.fromResource(resourceId))
                 )
             }
         }
@@ -75,10 +85,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
     }
 
     private fun onLocationChange(location: Location) {
-        if (currentLocation == null || currentLocation!!.distanceTo(location) > 2000) {
-            getPoints(location.latitude, location.longitude)
-        }
-        currentLocation = location
         if (!cameraMove) {
             mMap?.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
@@ -96,8 +102,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
             latitude,
             longitude,
             minDistance,
-            maxDistance,
-            PointStatus.COMPLETED
+            maxDistance
         )
     }
 
@@ -106,7 +111,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isCompassEnabled = true
         mMap.setMinZoomPreference(6f)
-        mMap.setMinZoomPreference(14f)
+        //mMap.setMinZoomPreference(14f)
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -162,7 +167,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback,
             val targetLocation = Location("") //provider name is unnecessary
             targetLocation.latitude = coords.latitude//your coords of course
             targetLocation.longitude = coords.longitude
-            onLocationChange(targetLocation)
+            if (currentLocation == null || currentLocation!!.distanceTo(targetLocation) > maxDistance) {
+                getPoints(targetLocation.latitude, targetLocation.longitude)
+                currentLocation = targetLocation
+            }
             cameraMove = false
         }
     }

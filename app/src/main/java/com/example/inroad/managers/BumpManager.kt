@@ -1,6 +1,5 @@
 package com.example.inroad.managers
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.activity.ComponentActivity
 import io.reactivex.rxjava3.core.Observable
@@ -20,8 +19,8 @@ class BumpManager(
     context: Context
 )  {
     lateinit var accelerometerManager: AccelerometerManager
-    private val bumpSubject by lazy { BehaviorSubject.create<Location>() }
-    val bumps: Observable<Location> = bumpSubject
+    private val bumpSubject by lazy { BehaviorSubject.create<BumpEntity>() }
+    val bumps: Observable<BumpEntity> = bumpSubject
 
     fun onStart(activity: ComponentActivity, locationManager: LocationManager) {
         var previousSquare: Double? = null
@@ -44,11 +43,16 @@ class BumpManager(
                     .pow(2.0) + spreads[2].toDouble().pow(2.0)
                 )
                 if (previousSquare != null) {
-                    var result = abs(previousSquare!!) - abs(currentSquare)
-                    Log.i("result", "${result}")
-                    if (abs(result) > 20) {
-                        bumpSubject.onNext(bump.locations)
-                        Log.i("resultBump", "${result}")
+                    var depth = abs(previousSquare!!) - abs(currentSquare)
+                    Log.i("result", "${depth}")
+                    if (abs(depth) > 1.9) {
+                        bumpSubject.onNext(BumpEntity(
+                            bump.locations.latitude,
+                            bump.locations.longitude,
+                            abs(depth),
+                            "",
+                            ""
+                        ))
                     }
                 }
                 previousSquare = currentSquare

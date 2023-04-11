@@ -11,8 +11,8 @@ class PointInteractor @Inject constructor() {
     private val repository: PointRepository = PointRepository()
     private val mapper: PointDataMapper = PointDataMapper()
 
-    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int, status: Int): Observable<List<Point>> =
-        repository.getPoints(latitude, longitude, minDistance, maxDistance, status).map {
+    fun getPoints(latitude: Double, longitude: Double, minDistance: Int, maxDistance: Int): Observable<List<Point>> =
+        repository.getPoints(latitude, longitude, minDistance, maxDistance).map {
         val result = mutableListOf<Point>();
         for (pointData in it) {
             result.add(mapper.dataToDomain(pointData));

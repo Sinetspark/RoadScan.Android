@@ -11,9 +11,7 @@ data class GetPoints(
     @SerializedName(DataConstants.KEY_MIN_DISTANCE)
     val minDistance: Int,
     @SerializedName(DataConstants.KEY_MAX_DISTANCE)
-    val maxDistance: Int,
-    @SerializedName(DataConstants.KEY_STATUS)
-    val status: Int,
+    val maxDistance: Int
 )
 
 enum class PointStatus {
