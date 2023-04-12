@@ -29,7 +29,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"
-        android:background="@drawable/button_intro"
+        android:background="@drawable/reviewbutton"
         android:fontFamily="@font/stolzl_medium"
         android:scaleType="centerCrop"
         android:text="@string/choice"
@@ -48,24 +48,36 @@
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/vechical_car"
                 android:layout_width="280dp"
                 android:layout_height="177dp"
                 android:layout_marginEnd="26dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                app:cardUseCompatPadding="true">
+                app:cardUseCompatPadding="true"
+                >
 
                 <ImageView
                     android:id="@+id/vechical_car_img"
-                    android:layout_width="280dp"
-                    android:layout_height="177dp"
-                    android:layout_marginEnd="26dp"
-                    android:background="@drawable/vechical_car"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@mipmap/vechical_car"
+                    />
+                <TextView
+                    android:id="@+id/vechical_car_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="14dp"
+                    android:text="Легковой"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/stolzl_medium"
+                    android:textSize="18sp"
                     />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/hatchback_car"
                 android:layout_width="280dp"
                 android:layout_height="177dp"
                 android:layout_marginEnd="26dp"
@@ -75,33 +87,54 @@
 
                 <ImageView
                     android:id="@+id/hatchback_car_img"
-                    android:layout_width="280dp"
-                    android:layout_height="177dp"
-                    android:layout_marginEnd="26dp"
-                    android:background="@drawable/hatchback_car"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@mipmap/hatchback_car"
+                    />
+                <TextView
+                    android:id="@+id/hatchback_car_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="14dp"
+                    android:text="Кроссовер/хэтчбэк"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/stolzl_medium"
+                    android:textSize="18sp"
                     />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/jeep_car"
                 android:layout_width="280dp"
                 android:layout_height="177dp"
                 android:layout_marginEnd="26dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                app:cardUseCompatPadding="true">
+                app:cardUseCompatPadding="true"
+                >
 
                 <ImageView
                     android:id="@+id/jeep_car_img"
-                    android:layout_width="280dp"
-                    android:layout_height="177dp"
-                    android:layout_marginEnd="26dp"
-                    android:background="@drawable/jeep_car"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@mipmap/jeep_car"
+                    />
+                <TextView
+                    android:id="@+id/jeep_car_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="14dp"
+                    android:text="Джип"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/stolzl_medium"
+                    android:textSize="18sp"
                     />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/watcher_car_img"
                 android:layout_width="280dp"
                 android:layout_height="177dp"
                 android:layout_marginRight="26dp"
@@ -109,12 +142,15 @@
                 app:cardElevation="4dp"
                 app:cardUseCompatPadding="true">
 
-                <ImageView
-                    android:id="@+id/watcher_car_img"
-                    android:layout_width="280dp"
-                    android:layout_height="177dp"
-                    android:layout_marginRight="26dp"
-                    android:src="@drawable/watcher_car"
+                <TextView
+                    android:id="@+id/watcher_car_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="У меня нет авто"
+                    android:fontFamily="@font/stolzl_medium"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
                     />
             </androidx.cardview.widget.CardView>
 
