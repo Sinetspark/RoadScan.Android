@@ -72,6 +72,7 @@ class LocationManager (
                 Log.v("TAG", "IN ON LOCATION CHANGE, lat=" + location.latitude + ", lon=" + location.longitude);
                 locationSubject.onNext(location)
                 speedSubject.onNext((location.speed * 3600) / 1000)
+                Log.v("speed", "speed=" + ((location.speed * 36)/10))
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?)
