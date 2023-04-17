@@ -23,7 +23,6 @@
         android:theme="@style/Theme.InRoad"
         android:versionCode="2">
         <activity
-             <activity
             android:name=".ui.CarChoiceActivity"
             android:exported="false">
             <meta-data
