@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import android.location.Location
 import android.util.Log
+import com.example.inroad.domain.entities.BumpEntity
 import com.example.inroad.managers.models.Bump
 import io.reactivex.rxjava3.functions.Function
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -35,7 +36,7 @@ class BumpManager(
             .combineLatest(observers, Function {
                 Bump(it[0] as Float, it[1] as Location, it[2] as FloatArray)
             })
-            .filter { it.speed > 5 } // todo km/h
+            .filter { it.speed > 29 } // todo km/h
             .subscribeOn(Schedulers.io())
             .subscribe { bump ->
                 var spreads = bump.spreads
@@ -45,7 +46,8 @@ class BumpManager(
                 if (previousSquare != null) {
                     var depth = abs(previousSquare!!) - abs(currentSquare)
                     Log.i("result", "${depth}")
-                    if (abs(depth) > 1.9) {
+                    if (abs(depth) > 3.5) {
+                        Log.i("resultBump", "${depth}")
                         bumpSubject.onNext(BumpEntity(
                             bump.locations.latitude,
                             bump.locations.longitude,
