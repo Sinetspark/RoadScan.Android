@@ -1,6 +1,7 @@
 package com.example.inroad.data
 
 import com.example.inroad.data.dto.GetPoints
+import com.example.inroad.data.dto.PointStatus
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

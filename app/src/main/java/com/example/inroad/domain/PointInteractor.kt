@@ -2,6 +2,7 @@ package com.example.inroad.domain
 
 import android.content.Context
 import com.example.inroad.data.PointRepository
+import com.example.inroad.data.dto.PointStatus
 import com.example.inroad.domain.entities.Point
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
