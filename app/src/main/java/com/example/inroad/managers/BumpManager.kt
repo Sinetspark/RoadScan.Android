@@ -36,7 +36,7 @@ class BumpManager(
             .combineLatest(observers, Function {
                 Bump(it[0] as Float, it[1] as Location, it[2] as FloatArray)
             })
-            .filter { it.speed > 29 } // todo km/h
+            .filter { it.speed > 14 } // todo km/h
             .subscribeOn(Schedulers.io())
             .subscribe { bump ->
                 var spreads = bump.spreads
@@ -46,7 +46,7 @@ class BumpManager(
                 if (previousSquare != null) {
                     var depth = abs(previousSquare!!) - abs(currentSquare)
                     Log.i("result", "${depth}")
-                    if (abs(depth) > 3.5) {
+                    if (abs(depth) >= 1.5) {
                         Log.i("resultBump", "${depth}")
                         bumpSubject.onNext(BumpEntity(
                             bump.locations.latitude,
